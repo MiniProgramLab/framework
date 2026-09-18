@@ -2,13 +2,13 @@
 
 独立的 pnpm monorepo，统一维护小程序框架、组件、构建工具和 VS Code / Cursor 扩展。当前实现支持微信 Skyline，包内不依赖宿主应用的业务路由、全局状态、图标或 API。
 
-源码仓库：<https://github.com/MiniProgramLab/framework>。为保持现有应用兼容，当前子包沿用 `@skyline-kit/*` 包名及 `skyline` 命令。
+源码仓库：<https://github.com/MiniProgramLab/framework>。子包统一使用 `@miniprogramlab/*` 命名空间，构建命令为 `skyline`。
 
 | 子包目录 | 包名 | 职责 |
 | --- | --- | --- |
-| `cli` | `@skyline-kit/cli` | TS、SCSS/Less、路由、npm 组件、Worklet 与微信产物构建 |
-| `framework` | `@skyline-kit/framework` | definePage、defineComponent、Store、页面归属及插件 |
-| `components` | `@skyline-kit/components` | page、page-header、overlay、popup、action-sheet、custom-tab-bar |
+| `cli` | `@miniprogramlab/cli` | TS、SCSS/Less、路由、npm 组件、Worklet 与微信产物构建 |
+| `framework` | `@miniprogramlab/core` | definePage、defineComponent、Store、页面归属及插件 |
+| `components` | `@miniprogramlab/ui` | page、page-header、overlay、popup、action-sheet、custom-tab-bar |
 | `vscode` | `skyline-kit-vscode` | WXML 高亮补全与跨文件定义跳转 |
 
 四个目录都是本仓库的 pnpm workspace 包。组件包通过 peerDependency 依赖框架，应用和组件共享同一框架实例。本仓库既可单独克隆，也可作为宿主项目的 Git submodule 开发。
@@ -59,8 +59,8 @@ git commit -m "chore: 更新框架引用版本"
 其他项目安装时，将路径替换成实际交付文件路径：
 
 ```sh
-pnpm add /交付目录/skyline-kit-framework-0.1.0.tgz /交付目录/skyline-kit-components-0.1.0.tgz
-pnpm add -D /交付目录/skyline-kit-cli-0.1.0.tgz typescript miniprogram-api-typings
+pnpm add /交付目录/miniprogramlab-core-0.1.0.tgz /交付目录/miniprogramlab-ui-0.1.0.tgz
+pnpm add -D /交付目录/miniprogramlab-cli-0.1.0.tgz typescript miniprogram-api-typings
 pnpm exec skyline dev
 ```
 
@@ -70,7 +70,7 @@ pnpm exec skyline dev
 
 1. 创建 `src/app.config.ts`，通过 `defineAppConfig` 指定 `entryPageName`、Skyline 配置及全局组件。
 2. 页面使用 `definePage`，各页面通过 `index.config.ts` 声明唯一 `pagesName`；开启原生底栏时在页面 `route.tab` 声明 2–5 个 Tab。
-3. `tsconfig.json` 的 `types` 包含 `miniprogram-api-typings` 与 `@skyline-kit/framework/globals`。
+3. `tsconfig.json` 的 `types` 包含 `miniprogram-api-typings` 与 `@miniprogramlab/core/globals`。
 4. 在 `App.onLaunch` 中安装应用自己的全局状态、首页导航与 Tab 列表。
 5. 使用 `skyline build --mode=development --typecheck` 做单次开发构建验证。
 

@@ -12,7 +12,7 @@
     "noEmit": true,
     "types": [
       "miniprogram-api-typings",
-      "@skyline-kit/framework/globals"
+      "@miniprogramlab/core/globals"
     ],
     "lib": [
       "ES2022"

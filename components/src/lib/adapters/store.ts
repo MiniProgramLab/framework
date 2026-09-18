@@ -2,22 +2,22 @@
 export {
   onStoreDispose,
   storeOwner,
-} from '@skyline-kit/framework/store/binding'
+} from '@miniprogramlab/core/store/binding'
 export {
   changeOverlay,
   enterOverlay,
   overlayCovered,
   removeOverlay,
-} from '@skyline-kit/framework/store/plugins/overlay/index'
+} from '@miniprogramlab/core/store/plugins/overlay/index'
 export type {
   OverlayEntry,
   OverlaySnapshot,
-} from '@skyline-kit/framework/store/plugins/overlay/index'
+} from '@miniprogramlab/core/store/plugins/overlay/index'
 export {
   observeBackground,
   createScrollIsolation,
-} from '@skyline-kit/framework/store/plugins/overlay/adapters/index'
+} from '@miniprogramlab/core/store/plugins/overlay/adapters/index'
 export type {
   OverlayHost,
   ScrollIsolation,
-} from '@skyline-kit/framework/store/plugins/overlay/adapters/index'
+} from '@miniprogramlab/core/store/plugins/overlay/adapters/index'

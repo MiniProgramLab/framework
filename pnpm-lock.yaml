@@ -46,7 +46,7 @@ importers:
 
   components:
     devDependencies:
-      '@skyline-kit/framework':
+      '@miniprogramlab/core':
         specifier: workspace:*
         version: link:../framework
       miniprogram-api-typings:

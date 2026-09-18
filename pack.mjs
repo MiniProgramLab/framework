@@ -8,7 +8,7 @@ const artifacts = fileURLToPath(new URL('./artifacts/', import.meta.url))
 const pnpm = process.env.npm_execpath
 if (!pnpm) throw new Error('请通过 pnpm pack:framework 执行')
 mkdirSync(artifacts, { recursive: true })
-for (const name of ['@skyline-kit/framework', '@skyline-kit/components', '@skyline-kit/cli']) {
+for (const name of ['@miniprogramlab/core', '@miniprogramlab/ui', '@miniprogramlab/cli']) {
   const result = spawnSync(process.execPath, [pnpm, '--filter', name, 'pack', '--pack-destination', artifacts], { stdio: 'inherit' })
   if (result.error) throw result.error
   if (result.status !== 0) process.exit(result.status || 1)

@@ -1,5 +1,5 @@
 {
-  "name": "@skyline-kit/framework",
+  "name": "@miniprogramlab/core",
   "version": "0.1.0",
   "description": "微信小程序组件封装与可插拔 Store 框架",
   "type": "module",

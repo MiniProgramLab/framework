@@ -1,5 +1,5 @@
 {
-  "name": "@skyline-kit/cli",
+  "name": "@miniprogramlab/cli",
   "version": "0.1.0",
   "description": "Skyline 微信小程序专用构建 CLI",
   "type": "module",

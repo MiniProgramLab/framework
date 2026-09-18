@@ -1,4 +1,4 @@
-# @skyline-kit/cli
+# @miniprogramlab/cli
 
 独立微信 Skyline 小程序构建器，通过 pnpm 安装后提供 `skyline` 命令。要求 Node.js 22+。
 
@@ -15,13 +15,13 @@ pnpm exec skyline --help
 ## 项目配置
 
 ```js
-import { defineConfig } from '@skyline-kit/cli'
+import { defineConfig } from '@miniprogramlab/cli'
 
 /** 当前应用需要的构建选项。 */
 export default defineConfig({
   source: 'src',
   outDir: 'dist',
-  customTabBar: '@skyline-kit/components/custom-tab-bar/index',
+  customTabBar: '@miniprogramlab/ui/custom-tab-bar/index',
   watchDirectories: [],
 })
 ```

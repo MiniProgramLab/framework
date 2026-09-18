@@ -25,7 +25,7 @@ Mini 表明小程序定位；Loom 表达将独立模块组合成完整开发体�
 | Skyline 扩展 | MiniLoom Skyline | `@miniloom/renderer-wechat-skyline` |
 | 微信默认组合 | MiniLoom 微信 Skyline 预设 | `@miniloom/preset-wechat-skyline` |
 
-包命名空间和扩展发布者标识是设计占位，本文不宣称已取得注册权。旧 `skyline` 命令和 `@skyline-kit/*` 进入兼容迁移期，不能只全局替换字符串而改变已有语义。
+包命名空间和扩展发布者标识是设计占位，本文不宣称已取得注册权。旧 `skyline` 命令和 `@miniprogramlab/*` 进入兼容迁移期，不能只全局替换字符串而改变已有语义。
 
 ## 2. 当前代码基础与必须保留的行为
 

@@ -1,5 +1,5 @@
 {
-  "name": "@skyline-kit/components",
+  "name": "@miniprogramlab/ui",
   "version": "0.1.0",
   "description": "基于 Skyline 的页面、弹层与弹动底栏组件",
   "type": "module",
@@ -24,11 +24,11 @@
   "devDependencies": {
     "typescript": "catalog:",
     "miniprogram-api-typings": "catalog:",
-    "@skyline-kit/framework": "workspace:*"
+    "@miniprogramlab/core": "workspace:*"
   },
   "peerDependencies": {
     "miniprogram-api-typings": ">=5.2.3",
-    "@skyline-kit/framework": "^0.1.0"
+    "@miniprogramlab/core": "^0.1.0"
   },
   "engines": {
     "node": ">=22"

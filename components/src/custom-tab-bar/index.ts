@@ -49,7 +49,7 @@ import {
   syncNavigationRoute,
   navigateTabSelection,
 } from './navigation.js'
-import { overlayBlocked } from '@skyline-kit/framework/store/plugins/overlay/index'
+import { overlayBlocked } from '@miniprogramlab/core/store/plugins/overlay/index'
 
 /** 原生 worklet 方法只读取固定的共享图，不捕获普通运行时对象。 */
 type FluidHost = WechatMiniprogram.Component.TrivialInstance & {

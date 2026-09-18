@@ -48,7 +48,7 @@ export async function compileModules({
   const localRuntime = path.join(source, 'framework/runtime.ts')
   const frameworkRuntime = await exists(localRuntime)
     ? localRuntime
-    : createRequire(path.join(root, 'package.json')).resolve('@skyline-kit/framework/runtime')
+    : createRequire(path.join(root, 'package.json')).resolve('@miniprogramlab/core/runtime')
 
   /** 本地模块保留源码目录，外部依赖按相对工作区的稳定身份分配唯一产物。 */
   function register(filename) {

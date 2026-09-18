@@ -1,9 +1,9 @@
 import { getWindowLayout } from '../lib/shared/window.js'
 import { headerProperties } from '../page-header/properties.js'
-import { createScrollIsolation } from '@skyline-kit/framework/store/plugins/overlay/adapters/index'
-import type { ScrollIsolation } from '@skyline-kit/framework/store/plugins/overlay/adapters/index'
-import { createScrollGate } from '@skyline-kit/framework/store/plugins/overlay/adapters/index.worklet'
-import type { ScrollGateHost } from '@skyline-kit/framework/store/plugins/overlay/adapters/index.worklet'
+import { createScrollIsolation } from '@miniprogramlab/core/store/plugins/overlay/adapters/index'
+import type { ScrollIsolation } from '@miniprogramlab/core/store/plugins/overlay/adapters/index'
+import { createScrollGate } from '@miniprogramlab/core/store/plugins/overlay/adapters/index.worklet'
+import type { ScrollGateHost } from '@miniprogramlab/core/store/plugins/overlay/adapters/index.worklet'
 
 /** 滚动适配器只由组件生命周期持有，不进入渲染数据。 */
 const scrolls = new WeakMap<object, ScrollIsolation>()

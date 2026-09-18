@@ -48,13 +48,13 @@ async function fixture(files, documents = {}) {
 async function componentFixture(files = {}) {
   const env = await fixture({
     'package.json': '{"name":"framework-component-fixture","private":true}',
-    'app.config.ts': 'import { libraryComponents } from "@skyline-kit/components"; defineAppConfig({ usingComponents: libraryComponents })',
+    'app.config.ts': 'import { libraryComponents } from "@miniprogramlab/ui"; defineAppConfig({ usingComponents: libraryComponents })',
     'index.wxml': '<page-header/>',
     ...files,
   })
-  const scope = path.join(env.root, 'node_modules/@skyline-kit')
+  const scope = path.join(env.root, 'node_modules/@miniprogramlab')
   await mkdir(scope, { recursive: true })
-  await symlink(fileURLToPath(new URL('../../components/', import.meta.url)), path.join(scope, 'components'), 'dir')
+  await symlink(fileURLToPath(new URL('../../components/', import.meta.url)), path.join(scope, 'ui'), 'dir')
   return env
 }
 
@@ -178,7 +178,7 @@ test('方法别名定位函数实现，properties 描述对象不污染模板字
 })
 
 test('Sass 样式包通配 exports 可跳到实际 token 文件', async () => {
-  const text = '@use "pkg:@skyline-kit/components/styles/_tokens.scss" as ui; .test { color: ui.$text-primary; }'
+  const text = '@use "pkg:@miniprogramlab/ui/styles/_tokens.scss" as ui; .test { color: ui.$text-primary; }'
   const { root, language } = await componentFixture({ 'index.scss': text })
   const file = path.join(root, 'index.scss')
   const found = language.definition(file, text.indexOf('$text-primary') + 2)
@@ -212,8 +212,8 @@ test('组件路径别名继承 tsconfig，注册调用支持导入别名和命�
     'tsconfig.base.json': '{"compilerOptions":{"baseUrl":".","paths":{"@ui/*":["components/*"]}}}',
     'tsconfig.json': '{"extends":"./tsconfig.base.json"}',
     'index.config.ts': 'definePageConfig({ usingComponents: { "alias-card": "@ui/card", "namespace-card": "@ui/namespace" } })',
-    'components/card.ts': 'import { defineComponent as register } from "@skyline-kit/framework";\nexport const card = register({ properties: { titleText: String } })',
-    'components/namespace.ts': 'import * as kit from "@skyline-kit/framework";\nkit.defineComponent({})',
+    'components/card.ts': 'import { defineComponent as register } from "@miniprogramlab/core";\nexport const card = register({ properties: { titleText: String } })',
+    'components/namespace.ts': 'import * as kit from "@miniprogramlab/core";\nkit.defineComponent({})',
     'index.wxml': '<alias-card ></alias-card><namespace-card/>',
   }
   const env = await fixture(files)

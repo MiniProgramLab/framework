@@ -30,25 +30,25 @@ function command(args, expected = 0) {
 }
 
 try {
-  const dependencies = Object.fromEntries(['framework', 'components', 'cli'].map((name) => [
-    '@skyline-kit/' + name, 'file:' + path.join(artifacts, 'skyline-kit-' + name + '-0.1.0.tgz'),
+  const dependencies = Object.fromEntries(['core', 'ui', 'cli'].map((name) => [
+    '@miniprogramlab/' + name, 'file:' + path.join(artifacts, 'miniprogramlab-' + name + '-0.1.0.tgz'),
   ]))
   await write('package.json', JSON.stringify({ name: 'skyline-external-check', private: true, type: 'module',
     dependencies, devDependencies: { typescript: '5.9.3', 'miniprogram-api-typings': '5.2.3' },
     scripts: { 'dev:check': 'skyline build --mode=development --typecheck' } }))
-  await write('skyline.config.mjs', 'export default { source: "mini", outDir: "output", customTabBar: "@skyline-kit/components/custom-tab-bar/index" }')
+  await write('skyline.config.mjs', 'export default { source: "mini", outDir: "output", customTabBar: "@miniprogramlab/ui/custom-tab-bar/index" }')
   await write('tsconfig.json', JSON.stringify({ compilerOptions: { target: 'ES2022', module: 'ESNext', moduleResolution: 'Bundler', strict: true,
-    noEmit: true, skipLibCheck: true, types: ['miniprogram-api-typings', '@skyline-kit/framework/globals'], paths: { '@wx/routes': ['./.cache/routes.generated.ts'] } }, include: ['mini/**/*.ts'] }))
+    noEmit: true, skipLibCheck: true, types: ['miniprogram-api-typings', '@miniprogramlab/core/globals'], paths: { '@wx/routes': ['./.cache/routes.generated.ts'] } }, include: ['mini/**/*.ts'] }))
   await write('project.config.json', JSON.stringify({ compileType: 'miniprogram', miniprogramRoot: './', setting: { skylineRenderEnable: true, compileWorklet: true } }))
   await write('project.private.config.example.json', '{ "note": "私有配置原始字节", "setting": { "urlCheck": false } }\n')
-  await write('mini/app.config.ts', `import { libraryComponents } from '@skyline-kit/components';
+  await write('mini/app.config.ts', `import { libraryComponents } from '@miniprogramlab/ui';
     defineAppConfig({ entryPageName: 'home', renderer: 'skyline', componentFramework: 'glass-easel', lazyCodeLoading: 'requiredComponents',
       usingComponents: libraryComponents, window: { navigationStyle: 'custom' },
       tabBar: { custom: true, color: '#000000', selectedColor: '#111111', backgroundColor: '#FFFFFF' },
       rendererOptions: { skyline: { defaultDisplayBlock: true, defaultContentBox: true, disableABTest: true, sdkVersionBegin: '3.0.0', sdkVersionEnd: '15.255.255' } } });`)
-  await write('mini/app.ts', `import { defineGlobalStore, installGlobalStore } from '@skyline-kit/framework';
-    import { installComponents } from '@skyline-kit/components';
-    import { installTabBar } from '@skyline-kit/components/custom-tab-bar/controller';
+  await write('mini/app.ts', `import { defineGlobalStore, installGlobalStore } from '@miniprogramlab/core';
+    import { installComponents } from '@miniprogramlab/ui';
+    import { installTabBar } from '@miniprogramlab/ui/custom-tab-bar/controller';
     import { routes } from '@wx/routes';
     const definition = defineGlobalStore(() => ({ count: 0 }));
     App({ onLaunch() {
@@ -62,7 +62,7 @@ try {
     await write('mini/pages/' + name + '/index.ts', 'definePage({ globalStore: true, methods: { increase() { this.$globalStore.update({ count: 1 }) } } })')
     await write('mini/pages/' + name + '/index.wxml', '<page title="独立检查"><view class="label" bindtap="increase">{{$globalStore.count}}</view></page>')
   }
-  await write('mini/pages/home/index.scss', '@use "pkg:@skyline-kit/components/styles/_tokens.scss" as ui; .label { color: ui.$text-primary; }')
+  await write('mini/pages/home/index.scss', '@use "pkg:@miniprogramlab/ui/styles/_tokens.scss" as ui; .label { color: ui.$text-primary; }')
   await write('mini/pages/mine/palette.less', '@tone: #123456; .paint() { color: @tone; }')
   await write('mini/pages/mine/index.less', '@import "palette"; .label { .paint(); }')
   await write('mini/icons/home.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0h20v20H0z"/></svg>')
@@ -73,7 +73,7 @@ try {
   const privateBytes = await readFile(privateFile)
   const app = JSON.parse(await readFile(path.join(root, 'output/app.json'), 'utf8'))
   assert.equal(app.pages.length, 2)
-  assert.match(app.usingComponents.page, /^\/miniprogram_npm\/@skyline-kit\/components\//)
+  assert.match(app.usingComponents.page, /^\/miniprogram_npm\/@miniprogramlab\/ui\//)
   for (const extension of ['js', 'json', 'wxml', 'wxss']) await readFile(path.join(root, 'output/custom-tab-bar/index.' + extension))
   assert.match(await readFile(path.join(root, 'output/pages/mine/index.wxss'), 'utf8'), /#123456/)
   command(['dev:check'])
@@ -86,7 +86,7 @@ try {
   await write('mini/pages/home/index.scss', '.label { color: red; }')
   // 从项目外启动 CLI，验证 --root 不依赖脚本所在目录。
   const resolver = createRequire(path.join(root, 'package.json'))
-  const cli = path.join(path.dirname(resolver.resolve('@skyline-kit/cli/package.json')), 'bin/skyline.mjs')
+  const cli = path.join(path.dirname(resolver.resolve('@miniprogramlab/cli/package.json')), 'bin/skyline.mjs')
   const worker = spawn(process.execPath, [cli, 'dev', '--root', root], { cwd: os.tmpdir(), stdio: ['ignore', 'pipe', 'pipe'] })
   let builds = 0
   let output = ''
