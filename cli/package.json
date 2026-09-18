@@ -1,0 +1,44 @@
+{
+  "name": "@skyline-kit/cli",
+  "version": "0.1.0",
+  "description": "Skyline 微信小程序专用构建 CLI",
+  "type": "module",
+  "bin": {
+    "skyline": "bin/skyline.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/options.d.ts",
+      "default": "./src/options.mjs"
+    },
+    "./*": "./src/*.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "scripts"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:check": "node scripts/check.mjs",
+    "build": "pnpm dev:check",
+    "prepack": "pnpm dev:check"
+  },
+  "dependencies": {
+    "dotenv": "catalog:",
+    "esbuild": "catalog:",
+    "sass": "catalog:",
+    "typescript": "catalog:",
+    "less": "4.4.1"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiniProgramLab/framework.git",
+    "directory": "cli"
+  }
+}

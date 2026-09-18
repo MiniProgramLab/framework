@@ -1,0 +1,10 @@
+/** 框架公开入口：组件包装、状态定义与插件装配。 */
+export { definePage, defineComponent } from './runtime.js'
+export type { PageOptions, ComponentOptions } from './runtime.js'
+export { defineGlobalStore } from './store/definition.js'
+export { installGlobalStore } from './store/global.js'
+export { definePageStore } from './store/plugins/page/index.js'
+export { defineStorePlugin } from './store/plugin.js'
+export { registerStorePlugin } from './store/setup.js'
+export type { Store, StoreSnapshot, StoreState, StoreStateOf } from './store/types.js'
+export type { AppConfig, PageConfig } from './config.js'

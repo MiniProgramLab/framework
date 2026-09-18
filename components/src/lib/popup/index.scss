@@ -1,0 +1,52 @@
+@use '../shared/panel';
+@use '../styles/tokens' as tokens;
+
+// 弹窗只提供表面与插槽外观，定位、滚动和动画由 Overlay 管理。
+.popup__surface {
+  border-radius: 40rpx;
+  background: tokens.$surface;
+  color: tokens.$text-primary;
+}
+.popup__surface--bottom {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.popup__surface--top {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.popup__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 32rpx;
+  flex-shrink: 0;
+}
+.popup__title {
+  flex: 1;
+  min-width: 0;
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 48rpx;
+}
+.popup__close {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: tokens.$touch-size;
+  min-width: 0;
+  max-width: tokens.$touch-size;
+  height: tokens.$touch-size;
+  padding: 0;
+  margin: -12rpx -12rpx -12rpx 8rpx;
+  border-radius: 50%;
+  background: tokens.$canvas;
+  color: tokens.$text-secondary;
+  font-size: 48rpx;
+  line-height: 1;
+}
+.popup__content {
+  padding: 0 32rpx;
+}

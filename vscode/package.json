@@ -1,0 +1,148 @@
+{
+  "name": "skyline-kit-vscode",
+  "displayName": "Skyline 小程序开发助手",
+  "description": "WXML 高亮补全、组件属性类型与注释悬浮、跨文件定义跳转和居中定位",
+  "version": "0.2.1",
+  "publisher": "skyline-kit",
+  "icon": "assets/icon.png",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./dist/extension.cjs",
+  "activationEvents": [
+    "onLanguage:wxml",
+    "onLanguage:scss",
+    "onLanguage:less",
+    "onLanguage:wxss"
+  ],
+  "scripts": {
+    "dev": "node scripts/build.mjs --watch",
+    "dev:check": "tsc --noEmit && node scripts/build.mjs",
+    "build": "pnpm dev:check",
+    "vscode:prepublish": "pnpm dev:check",
+    "package": "vsce package --no-dependencies --allow-missing-repository --skip-license",
+    "dev:test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "esbuild": "catalog:",
+    "@types/node": "^22.15.30",
+    "@types/vscode": "^1.96.0",
+    "@vscode/vsce": "3.6.2"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "wxml",
+        "aliases": [
+          "WXML",
+          "wxml"
+        ],
+        "extensions": [
+          ".wxml"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "wxss",
+        "aliases": [
+          "WXSS",
+          "wxss"
+        ],
+        "extensions": [
+          ".wxss"
+        ],
+        "configuration": "./style-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "wxml",
+        "scopeName": "text.html.wxml",
+        "path": "./syntaxes/wxml.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.expression.wxml": "javascript"
+        }
+      },
+      {
+        "language": "wxss",
+        "scopeName": "source.css.wxss",
+        "path": "./syntaxes/wxss.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "wxml",
+        "path": "./snippets/wxml.json"
+      }
+    ],
+    "configuration": {
+      "title": "Skyline 小程序开发助手",
+      "properties": {
+        "skylineMiniapp.componentRoots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "额外的组件搜索根目录，相对当前工作区；默认自动查找小程序源码根、应用包及仓库根。"
+        },
+        "skylineMiniapp.componentAliases": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "default": {},
+          "description": "将 usingComponents 中的路径或前缀映射到实际组件目录，值相对当前工作区，支持单个 * 通配符。"
+        },
+        "skylineMiniapp.centerDefinitions": {
+          "type": "boolean",
+          "default": true,
+          "description": "使用本扩展跳转定义后，将变量、方法、组件或样式声明滚动到编辑器中部。"
+        },
+        "skylineMiniapp.sourceRoot": {
+          "type": "string",
+          "default": "",
+          "description": "源码根目录；默认按最近的 app.config.ts 或 app.json 自动查找。"
+        },
+        "skylineMiniapp.styleRoots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "额外的全局样式或样式搜索目录，相对当前工作区。"
+        },
+        "skylineMiniapp.maxFiles": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 5000,
+          "default": 500,
+          "description": "一次递归解析的文件数量上限，防止异常引用阻塞编辑器。"
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiniProgramLab/framework.git",
+    "directory": "vscode"
+  }
+}

@@ -1,0 +1,101 @@
+// 宿主空白区域穿透点击，只有底栏接收交互。
+.custom-tab {
+  box-sizing: border-box;
+  width: 100%;
+  pointer-events: none;
+}
+.custom-tab--fixed {
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.custom-tab__bar {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto;
+  overflow: visible;
+  pointer-events: auto;
+}
+
+// 选中块仅保留纯色与缩放位移，不叠加高光、模糊或立体阴影。
+.custom-tab__position {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+.custom-tab__indicator {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+}
+
+// 每项至少 44px 高，图标与标签共享稳定的中心线。
+.custom-tab__item {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.custom-tab__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  transform: scale(1);
+}
+.custom-tab__icon {
+  position: relative;
+  flex-shrink: 0;
+}
+.custom-tab__glyph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+.custom-tab__label {
+  max-width: 100%;
+  margin-top: 5rpx;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.custom-tab__badge {
+  position: absolute;
+  top: -7rpx;
+  left: 70%;
+  min-width: 25rpx;
+  height: 27rpx;
+  padding: 0 6rpx;
+  border-radius: 999rpx;
+  box-sizing: border-box;
+  font-size: 18rpx;
+  line-height: 27rpx;
+  text-align: center;
+  white-space: nowrap;
+}
+.custom-tab__dot {
+  position: absolute;
+  top: -1rpx;
+  right: -6rpx;
+  width: 13rpx;
+  height: 13rpx;
+  border-radius: 50%;
+}

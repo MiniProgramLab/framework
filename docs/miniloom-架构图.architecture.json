@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MiniLoom · 织微小程序开发框架",
+    "subtitle": "首期微信 Skyline；平台、渲染与功能按契约注册。箭头表示调用或向宿主提供实现。",
+    "output": "miniloom-架构图.html",
+    "viewBox": [1240, 990]
+  },
+  "components": [
+    {"id":"app","type":"frontend","label":"业务与通用组件","sublabel":"共享契约 / 行为 / 主题","pos":[80,100],"size":[180,76]},
+    {"id":"core","type":"backend","label":"Core","sublabel":"定义 / 状态 / 生命周期","pos":[350,100],"size":[180,76]},
+    {"id":"runtime","type":"messagebus","label":"Runtime Scope","sublabel":"App → Page → Component","pos":[620,100],"size":[210,76]},
+    {"id":"runtimeAdapter","type":"cloud","label":"目标运行时实现","sublabel":"微信宿主 / Skyline 动画","pos":[930,100],"size":[210,76]},
+    {"id":"cli","type":"frontend","label":"统一 CLI","sublabel":"开发 / 构建 / 本地打包","pos":[80,330],"size":[180,76]},
+    {"id":"build","type":"backend","label":"Build","sublabel":"项目图 / 调度 / 产物发布","pos":[350,330],"size":[180,76]},
+    {"id":"buildHost","type":"messagebus","label":"Build Host","sublabel":"每个项目与目标独立会话","pos":[620,330],"size":[210,76]},
+    {"id":"buildAdapter","type":"cloud","label":"目标构建扩展","sublabel":"平台 / 渲染 / UI / 分发","pos":[930,330],"size":[210,76]},
+    {"id":"editor","type":"frontend","label":"VS Code / Cursor","sublabel":"通用扩展外壳与命令","pos":[80,560],"size":[180,76]},
+    {"id":"language","type":"backend","label":"Language Service","sublabel":"索引 / 补全 / 悬浮 / 跳转","pos":[350,560],"size":[180,76]},
+    {"id":"languageHost","type":"messagebus","label":"Language Host","sublabel":"每个项目与目标独立索引","pos":[620,560],"size":[210,76]},
+    {"id":"languageAdapter","type":"cloud","label":"目标语言扩展","sublabel":"方言 / 元数据 / 能力诊断","pos":[930,560],"size":[210,76]},
+    {"id":"contracts","type":"database","label":"共享协议 contracts · 三类宿主独立实例化","sublabel":"目标 / 能力 / 诊断 / 组件清单 / 端口；无 Node、编辑器或微信依赖","pos":[320,790],"size":[600,86]}
+  ],
+  "boundaries": [
+    {"kind":"region","label":"小程序运行时 · 只装配被选中的目标实现","wraps":["app","core","runtime","runtimeAdapter"]},
+    {"kind":"region","label":"Node 构建环境 · 注册后冻结计划，成功生成后发布","wraps":["cli","build","buildHost","buildAdapter"]},
+    {"kind":"region","label":"编辑器环境 · 静态分析与独立语言服务","wraps":["editor","language","languageHost","languageAdapter"]}
+  ],
+  "connections": [
+    {"from":"app","to":"core","variant":"emphasis","route":"straight"},
+    {"from":"core","to":"runtime","route":"straight"},
+    {"from":"runtimeAdapter","to":"runtime","label":"提供实现","route":"straight"},
+    {"from":"cli","to":"build","variant":"emphasis","route":"straight"},
+    {"from":"build","to":"buildHost","route":"straight"},
+    {"from":"buildAdapter","to":"buildHost","label":"登记贡献","route":"straight"},
+    {"from":"editor","to":"language","label":"LSP","variant":"emphasis","route":"straight"},
+    {"from":"language","to":"languageHost","route":"straight"},
+    {"from":"languageAdapter","to":"languageHost","label":"规则与数据","route":"straight"}
+  ],
+  "cards": [
+    {"dot":"cyan","title":"一套产品，明确分工","items":["Core、组件、CLI 与编辑器围绕同一套契约协作。","组件共享属性、状态行为与主题，原生视图按目标选择。"]},
+    {"dot":"emerald","title":"注册扩展，按需装配","items":["微信 adapter 与 Skyline renderer 分离。","新增抖音、支付宝时提供 adapter、UI 视图及语言描述。","共享协议不等于共享可变全局容器。"]},
+    {"dot":"amber","title":"保留当前工程保证","items":["首期继续支持 TypeScript、WXML、SCSS/Less。","私有配置始终保留原位置，构建不会覆盖其字节内容。","本图为设计提案；未来平台不代表已经实现。"]}
+  ]
+}

@@ -1,0 +1,13 @@
+@use '../shared/panel';
+
+// Overlay 始终覆盖整个窗口，透明只改变绘制。
+.overlay__mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #10151f;
+  opacity: 0;
+  pointer-events: auto;
+}

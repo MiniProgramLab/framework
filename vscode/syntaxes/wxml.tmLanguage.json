@@ -1,0 +1,93 @@
+{
+  "name": "WXML",
+  "scopeName": "text.html.wxml",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#expression"
+    },
+    {
+      "include": "#tag"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.block.wxml",
+      "begin": "<!--",
+      "end": "-->"
+    },
+    "expression": {
+      "name": "meta.embedded.expression.wxml",
+      "begin": "\\{\\{",
+      "end": "\\}\\}",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.embedded.begin.wxml"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.embedded.end.wxml"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    "tag": {
+      "name": "meta.tag.wxml",
+      "begin": "(</?)([A-Za-z][\\w:-]*)",
+      "end": "/?>",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.tag.begin.wxml"
+        },
+        "2": {
+          "name": "entity.name.tag.wxml"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.end.wxml"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#expression"
+        },
+        {
+          "name": "entity.other.attribute-name.wxml",
+          "match": "[\\w:@-]+(?=\\s*=|\\s|/?>)"
+        },
+        {
+          "name": "keyword.operator.assignment.wxml",
+          "match": "="
+        },
+        {
+          "name": "string.quoted.double.wxml",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.wxml",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "include": "#expression"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

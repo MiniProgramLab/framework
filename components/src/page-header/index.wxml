@@ -1,0 +1,78 @@
+<view
+  class="page-header"
+  style="background: {{background}}; padding-top: {{statusBarHeight}}px;"
+>
+  <!-- 微信绘制状态栏与胶囊；此处只保留实际设备所需空间。 -->
+  <view
+    class="page-header__nav-safe"
+    style="padding-left: {{safeLeft}}px; padding-right: {{contentRight}}px;"
+  >
+    <view class="page-header__nav" style="height: {{navigationBarHeight}}px;">
+      <button
+        size="mini"
+        wx:if="{{back}}"
+        class="page-header__back {{navigating ? 'page-header__disabled' : ''}}"
+        hover-class="page-header__pressed"
+        hover-stay-time="100"
+        disabled="{{navigating}}"
+        aria-label="返回上一页"
+        bindtap="onBack"
+      >
+        <view class="page-header__arrow" />
+      </button>
+      <view wx:if="{{variant === 'large'}}" class="page-header__eyebrow-wrap">
+        <text wx:if="{{eyebrow}}" class="page-header__eyebrow"
+          >{{eyebrow}}</text
+        >
+        <view
+          wx:if="{{eyebrow && accent !== 'none'}}"
+          class="page-header__accent page-header__accent--{{accent}}"
+        />
+      </view>
+      <text wx:else class="page-header__compact-title">{{title}}</text>
+      <button
+        size="mini"
+        wx:if="{{variant !== 'large' && actionText}}"
+        class="page-header__action {{actionDisabled ? 'page-header__disabled' : ''}}"
+        hover-class="page-header__pressed"
+        hover-stay-time="100"
+        disabled="{{actionDisabled}}"
+        bindtap="onAction"
+      >
+        {{actionText}}
+      </button>
+    </view>
+  </view>
+  <view
+    wx:if="{{variant === 'large' || subtitle}}"
+    style="padding-left: {{safeLeft}}px; padding-right: {{safeRight}}px;"
+  >
+    <view class="page-header__heading">
+      <view wx:if="{{variant === 'large'}}" class="page-header__title-row">
+        <view class="page-header__title-wrap">
+          <text class="page-header__large-title">{{title}}</text>
+          <view
+            wx:if="{{!eyebrow && accent !== 'none'}}"
+            class="page-header__accent page-header__accent--{{accent}}"
+          />
+        </view>
+        <button
+          size="mini"
+          wx:if="{{actionText}}"
+          class="page-header__action {{actionDisabled ? 'page-header__disabled' : ''}}"
+          hover-class="page-header__pressed"
+          hover-stay-time="100"
+          disabled="{{actionDisabled}}"
+          bindtap="onAction"
+        >
+          {{actionText}}
+        </button>
+      </view>
+      <text wx:if="{{subtitle}}" class="page-header__subtitle"
+        >{{subtitle}}</text
+      >
+    </view>
+  </view>
+  <!-- 插画或筛选栏由业务插槽提供，不在基础组件中绑定性别和数据。 -->
+  <slot name="extra" />
+</view>

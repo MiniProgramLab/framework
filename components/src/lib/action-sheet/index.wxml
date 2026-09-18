@@ -1,0 +1,89 @@
+<overlay
+  id="overlay"
+  presentation="{{ { mounted: mounted, rendered: rendered, covered: covered, windowHeight: windowHeight } }}"
+  transparent="{{transparent}}"
+  close-on-mask="{{closeOnMask}}"
+  bindclose="onMaskClose"
+/>
+<root-portal>
+  <view
+    wx:if="{{mounted}}"
+    class="layer"
+    style="height: {{windowHeight}}px; {{!rendered || covered ? 'display: none;' : ''}}"
+  >
+    <view
+      class="layer__viewport layer--{{resolvedPosition}}"
+      style="top: {{viewportTop}}px; bottom: {{viewportBottom}}px;"
+    >
+      <view
+        class="layer__surface action-sheet__surface"
+        style="width: {{surfaceWidth}}px; max-height: {{surfaceMaxHeight}}px; padding-top: {{hasContent ? surfaceTop : 0}}px; padding-bottom: {{hasContent ? surfaceBottom : 0}}px;"
+        catchtap="consumeTouch"
+      >
+        <view class="layer__header" catchtouchmove="consumeTouch"
+          ><view wx:if="{{title}}" class="action-sheet__header"
+            >{{title}}</view
+          ></view
+        >
+        <vertical-drag-gesture-handler
+          wx:if="{{scrollable}}"
+          native-view="scroll-view"
+          worklet:should-accept-gesture="shouldScrollRespond"
+          worklet:should-response-on-move="shouldScrollRespond"
+        >
+          <scroll-view
+            class="layer__scroll"
+            type="list"
+            scroll-y
+            enhanced
+            style="height: {{bodyHeight}}px;"
+          >
+            <view class="layer__content"
+              ><view class="action-sheet__list">
+                <button
+                  wx:for="{{actions}}"
+                  class="action-sheet__item {{item.tone === 'danger' ? 'action-sheet__item--danger' : ''}} {{item.disabled ? 'action-sheet__item--disabled' : ''}}"
+                  disabled="{{item.disabled || selecting}}"
+                  data-index="{{index}}"
+                  bindtap="onSelect"
+                >
+                  {{item.label}}
+                </button>
+              </view></view
+            >
+          </scroll-view>
+        </vertical-drag-gesture-handler>
+        <view
+          wx:else
+          class="layer__static"
+          style="max-height: {{bodyHeight}}px;"
+          catchtouchmove="consumeTouch"
+          ><view class="layer__content"
+            ><view class="action-sheet__list">
+              <button
+                wx:for="{{actions}}"
+                class="action-sheet__item {{item.tone === 'danger' ? 'action-sheet__item--danger' : ''}} {{item.disabled ? 'action-sheet__item--disabled' : ''}}"
+                disabled="{{item.disabled || selecting}}"
+                data-index="{{index}}"
+                bindtap="onSelect"
+              >
+                {{item.label}}
+              </button>
+            </view></view
+          ></view
+        >
+        <view class="layer__footer" catchtouchmove="consumeTouch"
+          ><view wx:if="{{cancelText}}" class="action-sheet__footer">
+            <button
+              class="action-sheet__cancel"
+              disabled="{{selecting}}"
+              bindtap="onCancel"
+            >
+              {{cancelText}}
+            </button>
+          </view></view
+        >
+      </view>
+    </view>
+  </view>
+</root-portal>

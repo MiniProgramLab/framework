@@ -1,0 +1,17 @@
+# 本机依赖、构建产物和交付文件不进入源码仓库。
+node_modules/
+.pnpm-store/
+**/dist/
+**/.cache/
+/artifacts/
+/vscode/licenses/
+*.vsix
+*.tgz
+*.tsbuildinfo
+.DS_Store
+
+# 环境变量与微信开发者工具私有配置仅保留在本机。
+.env
+.env.*
+!.env.example
+**/project.private.config.json

@@ -1,0 +1,22 @@
+{
+  "name": "@miniprogramlab/workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MiniProgramLab 小程序框架、组件、构建工具与编辑器扩展工作区",
+  "packageManager": "pnpm@10.13.1",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.13.1 <11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiniProgramLab/framework.git"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --if-present dev",
+    "dev:check": "pnpm -r --workspace-concurrency=1 dev:check",
+    "dev:test": "pnpm --filter skyline-kit-vscode dev:test",
+    "pack:framework": "node pack.mjs",
+    "dev:framework:install-check": "node checks/install.mjs"
+  }
+}

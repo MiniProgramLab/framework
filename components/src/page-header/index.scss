@@ -1,0 +1,126 @@
+@use '../lib/styles/tokens' as tokens;
+
+// 导航保持自然高度，正文滚动时页头始终可见。
+.page-header {
+  flex-shrink: 0;
+  color: tokens.$text-primary;
+}
+.page-header__nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: tokens.$page-padding;
+}
+.page-header__back,
+.page-header__action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: tokens.$touch-size;
+  min-height: tokens.$touch-size;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 12rpx;
+  border: 0;
+  border-radius: 24rpx;
+  background: transparent;
+  color: tokens.$text-primary;
+  line-height: 44px;
+  transition:
+    transform 100ms ease,
+    opacity 100ms ease;
+  &::after {
+    border: 0;
+  }
+}
+.page-header__back {
+  width: tokens.$touch-size;
+  margin-left: -12px;
+}
+.page-header__arrow {
+  width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  border-left: 3px solid tokens.$text-primary;
+  border-bottom: 3px solid tokens.$text-primary;
+  transform: rotate(45deg);
+}
+.page-header__disabled {
+  opacity: 0.4;
+}
+.page-header__pressed {
+  transform: scale(0.96);
+  opacity: 0.65;
+}
+.page-header__compact-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 48rpx;
+}
+.page-header__eyebrow-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.page-header__eyebrow {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  line-height: 36rpx;
+}
+.page-header__heading {
+  padding: 16rpx tokens.$page-padding 32rpx;
+}
+.page-header__title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.page-header__title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.page-header__large-title {
+  display: block;
+  font-size: 72rpx;
+  font-weight: 700;
+  line-height: 88rpx;
+  word-break: break-all;
+}
+.page-header__accent {
+  width: 48rpx;
+  height: 8rpx;
+  margin-top: 4rpx;
+  border-radius: 8rpx;
+  background: tokens.$lime;
+  &--blue {
+    background: tokens.$cobalt;
+  }
+  &--peach {
+    background: tokens.$peach;
+  }
+  &--lavender {
+    background: tokens.$lavender;
+  }
+}
+.page-header__subtitle {
+  display: block;
+  margin-top: 12rpx;
+  color: tokens.$text-secondary;
+  font-size: 28rpx;
+  line-height: 42rpx;
+}
+.page-header__action {
+  max-width: 176rpx;
+  color: tokens.$cobalt;
+  font-size: 28rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

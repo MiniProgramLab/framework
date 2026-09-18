@@ -1,0 +1,29 @@
+{
+  "循环节点": {
+    "prefix": "wxfor",
+    "body": [
+      "<view wx:for=\"{{${1:items}}}\" wx:key=\"${2:id}\">",
+      "  $0",
+      "</view>"
+    ],
+    "description": "带稳定键的循环节点"
+  },
+  "条件节点": {
+    "prefix": "wxif",
+    "body": [
+      "<view wx:if=\"{{${1:visible}}}\">",
+      "  $0",
+      "</view>"
+    ],
+    "description": "条件渲染节点"
+  },
+  "页面容器": {
+    "prefix": "skpage",
+    "body": [
+      "<page title=\"${1:标题}\" back=\"{{false}}\">",
+      "  $0",
+      "</page>"
+    ],
+    "description": "Skyline 页面容器"
+  }
+}

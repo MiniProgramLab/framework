@@ -1,0 +1,50 @@
+@use '../shared/panel';
+@use '../styles/tokens' as tokens;
+
+// 菜单只提供选项外观，容器高度和安全区统一交给 Overlay。
+.action-sheet__surface {
+  border-radius: 40rpx 40rpx 0 0;
+  background: tokens.$surface;
+  color: tokens.$text-primary;
+}
+.action-sheet__header {
+  padding: 32rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 48rpx;
+}
+.action-sheet__list {
+  padding: 8rpx 32rpx 16rpx;
+}
+.action-sheet__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 104rpx;
+  margin: 0;
+  padding: 24rpx 16rpx;
+  border-radius: 24rpx;
+  background: tokens.$surface;
+  color: tokens.$text-primary;
+  font-size: 32rpx;
+  line-height: 44rpx;
+}
+.action-sheet__item--danger {
+  color: #c83b35;
+}
+.action-sheet__item--disabled {
+  color: #a6ada4;
+}
+.action-sheet__footer {
+  padding: 16rpx 32rpx 24rpx;
+  background: tokens.$canvas;
+}
+.action-sheet__cancel {
+  min-height: 96rpx;
+  padding: 22rpx 16rpx;
+  border-radius: 24rpx;
+  background: tokens.$surface;
+  color: tokens.$text-secondary;
+  font-size: 30rpx;
+  line-height: 44rpx;
+}

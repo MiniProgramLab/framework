@@ -1,0 +1,91 @@
+<view
+  class="page-shell"
+  style="height: {{windowHeight ? windowHeight + 'px' : '100vh'}}; background: {{background}};"
+>
+  <view class="page-shell__header">
+    <page-header
+      wx:if="{{headerMode === 'default'}}"
+      title="{{title}}"
+      subtitle="{{subtitle}}"
+      eyebrow="{{eyebrow}}"
+      variant="{{variant}}"
+      back="{{back}}"
+      auto-back="{{autoBack}}"
+      home-url="{{homeUrl}}"
+      action-text="{{actionText}}"
+      action-disabled="{{actionDisabled}}"
+      accent="{{accent}}"
+      background="{{background}}"
+      bindback="onBack"
+      bindaction="onAction"
+      bindnavigationerror="onNavigationError"
+    >
+      <view slot="extra"><slot name="header-extra" /></view>
+    </page-header>
+    <slot wx:elif="{{headerMode === 'custom'}}" name="header" />
+    <view wx:elif="{{safeTop}}" style="height: {{topInset}}px;" />
+  </view>
+  <!-- 页头和底栏参与弹性布局，滚动区自然获得剩余高度。 -->
+  <vertical-drag-gesture-handler
+    wx:if="{{scrollable}}"
+    native-view="scroll-view"
+    worklet:should-accept-gesture="shouldScrollRespond"
+    worklet:should-response-on-move="shouldScrollRespond"
+  >
+    <scroll-view
+      class="page-shell__scroll"
+      scroll-y
+      type="list"
+      enhanced
+      enable-back-to-top
+      scroll-top="{{scrollTop}}"
+      scroll-into-view="{{scrollIntoView}}"
+      scroll-with-animation="{{scrollWithAnimation}}"
+      upper-threshold="{{upperThreshold}}"
+      lower-threshold="{{lowerThreshold}}"
+      refresher-enabled="{{refresherEnabled && !scrollLocked}}"
+      refresher-triggered="{{refresherTriggered}}"
+      refresher-threshold="{{refresherThreshold}}"
+      refresher-background="{{refresherBackground}}"
+      bindscroll="onScrollEvent"
+      bindscrolltoupper="onScrollEvent"
+      bindscrolltolower="onScrollEvent"
+      bindrefresherpulling="onScrollEvent"
+      bindrefresherrefresh="onScrollEvent"
+      bindrefresherrestore="onScrollEvent"
+      bindrefresherabort="onScrollEvent"
+    >
+      <view
+        style="padding-left: {{safeLeft}}px; padding-right: {{safeRight}}px;"
+      >
+        <view
+          class="page-shell__body {{padded ? 'page-shell__body--padded' : ''}}"
+          ><slot
+        /></view>
+        <view style="height: {{bottomSpace}}px;" />
+        <view style="height: {{safeBottom && !footer ? bottomInset : 0}}px;" />
+      </view>
+    </scroll-view>
+  </vertical-drag-gesture-handler>
+  <view
+    wx:else
+    class="page-shell__static"
+    style="padding-left: {{safeLeft}}px; padding-right: {{safeRight}}px; padding-bottom: {{bottomSpace + (safeBottom && !footer ? bottomInset : 0)}}px;"
+  >
+    <view
+      class="page-shell__body page-shell__body--static {{padded ? 'page-shell__body--padded' : ''}}"
+      ><slot
+    /></view>
+  </view>
+  <view
+    wx:if="{{footer}}"
+    class="page-shell__footer"
+    style="padding-left: {{safeLeft}}px; padding-right: {{safeRight}}px; padding-bottom: {{safeBottom ? bottomInset : 0}}px; background: {{footerBackground}};"
+  >
+    <view class="{{footerPadded ? 'page-shell__footer-content' : ''}}"
+      ><slot name="footer"
+    /></view>
+  </view>
+  <!-- 弹层可在此插入 root-portal，避免被滚动容器裁切。 -->
+  <slot name="overlay" />
+</view>

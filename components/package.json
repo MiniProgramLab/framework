@@ -1,0 +1,43 @@
+{
+  "name": "@skyline-kit/components",
+  "version": "0.1.0",
+  "description": "基于 Skyline 的页面、弹层与弹动底栏组件",
+  "type": "module",
+  "files": [
+    "src",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json",
+    "./*": "./src/*.ts",
+    "./styles/*": "./src/lib/styles/*"
+  },
+  "scripts": {
+    "dev": "tsc --noEmit --watch",
+    "dev:check": "tsc --noEmit",
+    "build": "pnpm dev:check",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm dev:check"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "miniprogram-api-typings": "catalog:",
+    "@skyline-kit/framework": "workspace:*"
+  },
+  "peerDependencies": {
+    "miniprogram-api-typings": ">=5.2.3",
+    "@skyline-kit/framework": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "miniprogram": "src",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiniProgramLab/framework.git",
+    "directory": "components"
+  }
+}

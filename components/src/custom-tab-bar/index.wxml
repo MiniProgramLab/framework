@@ -1,0 +1,84 @@
+<root-portal enable="{{fixed}}">
+  <view
+    class="custom-tab {{fixed ? 'custom-tab--fixed' : ''}}"
+    style="{{hostStyle}} {{hidden || modalSuspended ? 'display: none;' : ''}}"
+  >
+    <tap-gesture-handler
+      worklet:ongesture="onTapGesture"
+      worklet:should-accept-gesture="shouldAcceptTap"
+    >
+      <horizontal-drag-gesture-handler
+        worklet:ongesture="onDragGesture"
+        worklet:should-accept-gesture="shouldAcceptDrag"
+        worklet:should-response-on-move="shouldRespondDrag"
+      >
+        <long-press-gesture-handler
+          worklet:ongesture="onLongPressGesture"
+          worklet:should-accept-gesture="shouldAcceptDrag"
+        >
+          <view
+            class="custom-tab__bar"
+            style="{{barStyle}}"
+            bindtouchend="onTouchEnd"
+            bindtouchcancel="onTouchCancel"
+          >
+            <!-- 纯色选中块与内容层分离，形变时图标不会被拉扁。 -->
+            <view
+              class="custom-tab__position"
+              style="{{positionStyle}} opacity:{{measured && hasSelection ? 1 : 0}};"
+              aria-hidden="true"
+            >
+              <view class="custom-tab__indicator" style="{{indicatorStyle}}" />
+            </view>
+            <view
+              wx:for="{{items}}"
+              wx:key="id"
+              class="custom-tab__item"
+              style="{{itemStyle}} color:{{item.disabled ? disabledColor : activeId === item.id ? selectedColor : color}};"
+              data-index="{{index}}"
+              bindtouchstart="onTouchStart"
+              bindtap="onTap"
+              aria-role="button"
+              aria-label="{{item.text + (activeId === item.id ? '，已选中' : '') + (item.disabled || disabled || navigating ? '，不可用' : '') + (item.badgeText ? '，' + item.badgeText + '条提醒' : item.dot ? '，有新提醒' : '')}}"
+            >
+              <view
+                class="custom-tab__content custom-tab__ui-content-{{index}}"
+              >
+                <view class="custom-tab__icon" style="{{iconStyle}}">
+                  <!-- 图标只提供形状，选中与禁用颜色均由同一套基础色生成。 -->
+                  <view
+                    class="custom-tab__glyph custom-tab__ui-normal-{{index}}"
+                    style="{{item.maskStyle}} background-color:{{item.disabled ? disabledColor : color}};opacity:{{activeId === item.id ? 0 : 1}};"
+                    aria-hidden="true"
+                  />
+                  <view
+                    class="custom-tab__glyph custom-tab__ui-selected-{{index}}"
+                    style="{{item.selectedMaskStyle}} background-color:{{item.disabled ? disabledColor : selectedColor}};opacity:{{activeId === item.id ? 1 : 0}};"
+                    aria-hidden="true"
+                  />
+                  <text
+                    wx:if="{{item.badgeText}}"
+                    class="custom-tab__badge"
+                    style="{{badgeStyle}}"
+                    >{{item.badgeText}}</text
+                  >
+                  <view
+                    wx:elif="{{item.dot}}"
+                    class="custom-tab__dot"
+                    style="{{badgeStyle}}"
+                  />
+                </view>
+                <text
+                  hidden="{{!showLabel}}"
+                  class="custom-tab__label custom-tab__ui-label-{{index}}"
+                  style="{{labelStyle}}"
+                  >{{item.text}}</text
+                >
+              </view>
+            </view>
+          </view>
+        </long-press-gesture-handler>
+      </horizontal-drag-gesture-handler>
+    </tap-gesture-handler>
+  </view>
+</root-portal>

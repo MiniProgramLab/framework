@@ -1,0 +1,41 @@
+{
+  "name": "@skyline-kit/framework",
+  "version": "0.1.0",
+  "description": "微信小程序组件封装与可插拔 Store 框架",
+  "type": "module",
+  "files": [
+    "src",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json",
+    "./*": "./src/*.ts",
+    "./globals": "./src/globals.d.ts",
+    "./config": "./src/config.d.ts"
+  },
+  "scripts": {
+    "dev": "tsc --noEmit --watch",
+    "dev:check": "tsc --noEmit",
+    "build": "pnpm dev:check",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm dev:check"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "miniprogram-api-typings": "catalog:"
+  },
+  "peerDependencies": {
+    "miniprogram-api-typings": ">=5.2.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiniProgramLab/framework.git",
+    "directory": "framework"
+  }
+}

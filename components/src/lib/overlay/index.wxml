@@ -1,0 +1,56 @@
+<root-portal>
+  <view
+    wx:if="{{presentation ? presentation.mounted : mounted}}"
+    class="layer"
+    style="height: {{presentation ? presentation.windowHeight : windowHeight}}px; {{(presentation ? !presentation.rendered || presentation.covered : !rendered || covered) ? 'display: none;' : ''}}"
+  >
+    <!-- 透明只影响绘制，遮罩始终拦截背景操作。 -->
+    <view
+      class="overlay__mask"
+      style="{{transparent ? 'background: transparent;' : ''}}"
+      bindtap="onMaskTap"
+      catchtouchmove="consumeTouch"
+    />
+    <view
+      wx:if="{{!presentation}}"
+      class="layer__viewport layer--{{resolvedPosition}}"
+      style="top: {{viewportTop}}px; bottom: {{viewportBottom}}px;"
+    >
+      <view
+        class="layer__surface surface-class"
+        style="width: {{surfaceWidth}}px; max-height: {{surfaceMaxHeight}}px; padding-top: {{hasContent ? surfaceTop : 0}}px; padding-bottom: {{hasContent ? surfaceBottom : 0}}px;"
+        catchtap="consumeTouch"
+      >
+        <view class="layer__header" catchtouchmove="consumeTouch"
+          ><slot name="header"
+        /></view>
+        <vertical-drag-gesture-handler
+          wx:if="{{scrollable}}"
+          native-view="scroll-view"
+          worklet:should-accept-gesture="shouldScrollRespond"
+          worklet:should-response-on-move="shouldScrollRespond"
+        >
+          <scroll-view
+            class="layer__scroll"
+            type="list"
+            scroll-y
+            enhanced
+            style="height: {{bodyHeight}}px;"
+          >
+            <view class="layer__content"><slot /></view>
+          </scroll-view>
+        </vertical-drag-gesture-handler>
+        <view
+          wx:else
+          class="layer__static"
+          style="max-height: {{bodyHeight}}px;"
+          catchtouchmove="consumeTouch"
+          ><view class="layer__content"><slot /></view
+        ></view>
+        <view class="layer__footer" catchtouchmove="consumeTouch"
+          ><slot name="footer"
+        /></view>
+      </view>
+    </view>
+  </view>
+</root-portal>

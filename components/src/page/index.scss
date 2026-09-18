@@ -1,0 +1,48 @@
+@use '../lib/styles/tokens' as tokens;
+
+// virtualHost 去掉组件宿主层；内部根节点用实际窗口高度建立完整布局。
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  color: tokens.$text-primary;
+}
+.page-shell__header,
+.page-shell__footer {
+  flex-shrink: 0;
+}
+.page-shell__scroll {
+  flex: 1;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+}
+.page-shell__static {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.page-shell__body {
+  padding-top: 8rpx;
+  padding-bottom: 32rpx;
+}
+.page-shell__body--padded {
+  padding-left: tokens.$page-padding;
+  padding-right: tokens.$page-padding;
+}
+.page-shell__body--static {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.page-shell__footer {
+  box-shadow: 0 -4rpx 24rpx rgba(16, 21, 31, 0.035);
+}
+.page-shell__footer-content {
+  padding: 20rpx tokens.$page-padding 24rpx;
+}

@@ -1,0 +1,51 @@
+// 底座只负责布局与命中，内容外观由使用它的组件提供。
+.layer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+.layer__viewport {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.layer__surface {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: auto;
+}
+.layer--bottom {
+  justify-content: flex-end;
+}
+.layer--top {
+  justify-content: flex-start;
+}
+.layer--left {
+  align-items: flex-start;
+}
+.layer--right {
+  align-items: flex-end;
+}
+.layer__header,
+.layer__footer {
+  flex-shrink: 0;
+}
+.layer__scroll {
+  flex-shrink: 1;
+  width: 100%;
+}
+.layer__static {
+  overflow: hidden;
+}
