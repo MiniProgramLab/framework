@@ -167,4 +167,6 @@ git push origin vscode-v0.0.3
 
 两个市场使用独立任务；某个市场失败时，可在 Actions 中选择 **Re-run failed jobs**。已经发布的同版本会跳过，不能用同版本覆盖已发布内容。打包结果作为工作流 artifact 保留 14 天；超过保留期需重新运行整个工作流以生成 VSIX。
 
+首次配置时可在 Actions 的“发布 VS Code 插件”工作流中点击 **Run workflow**。手动运行仅验证并生成 VSIX，不读取市场凭据或发布版本。当前微软开通流程要求新 Azure DevOps 组织关联 Azure 订阅；如果没有可用订阅，需要先由账号持有人完成订阅开通，或使用已有组织生成 `VSCE_PAT`。
+
 采用 [Apache-2.0](LICENSE)，内置依赖相关声明见 [NOTICE](NOTICE)。

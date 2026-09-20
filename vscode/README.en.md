@@ -167,4 +167,6 @@ Only stable `major.minor.patch` versions are accepted; prerelease suffixes such 
 
 If one marketplace fails, select **Re-run failed jobs** in Actions. Already published versions are skipped and cannot be overwritten. The VSIX artifact is retained for 14 days; after it expires, rerun the entire workflow to rebuild it.
 
+For initial setup, click **Run workflow** in the publishing workflow on Actions. Manual runs only validate and package the VSIX; they do not access marketplace credentials or publish a version. Microsoft's current onboarding requires a new Azure DevOps organization to be linked to an Azure subscription. If none is available, the account holder must complete subscription setup first or use an existing organization to generate `VSCE_PAT`.
+
 Licensed under [Apache-2.0](LICENSE). Bundled dependency notices are listed in [NOTICE](NOTICE).

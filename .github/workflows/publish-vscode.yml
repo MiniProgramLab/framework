@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'vscode-v*'
+  # 手动运行只检查并打包，用于首次配置时验证 CI，不上传市场。
+  workflow_dispatch:
 
 # 发布使用市场专属凭据，仓库令牌只需要读取源码。
 permissions:
@@ -40,11 +42,11 @@ jobs:
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs'
 
-          // 只发布正式版本，版本号由已提交的插件清单决定。
+          // 手动运行仅验证正式版本格式；推送 tag 时还必须与插件清单一致。
           const { version } = JSON.parse(readFileSync('vscode/package.json', 'utf8'))
           const tag = process.env.GITHUB_REF_NAME
           if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version)
-            || tag !== `vscode-v${version}`) {
+            || (process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch' && tag !== `vscode-v${version}`)) {
             throw new Error(`tag ${tag} 必须与 vscode/package.json 的正式版本一致：vscode-v${version}`)
           }
           console.log(`准备发布 miniprogramlab.devtool@${version}`)
@@ -72,6 +74,8 @@ jobs:
 
   publish:
     name: 发布到 ${{ matrix.marketplace }}
+    # 只有推送版本 tag 才真正发布；手动构建不会读取市场凭据。
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/vscode-v')
     needs: package
     runs-on: ubuntu-latest
     timeout-minutes: 15
