@@ -19,19 +19,20 @@ concurrency:
 jobs:
   package:
     name: 校验并打包
-    runs-on: ubuntu-latest
+    # 固定已验证的系统版本，避免 runner 镜像自动升级影响发布。
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: 检出版本源码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: 安装 pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: 安装 Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: pnpm
@@ -65,7 +66,7 @@ jobs:
           pnpm --filter devtool package --out ../artifacts/devtool.vsix
 
       - name: 保存两个市场共用的 VSIX
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vscode-${{ github.ref_name }}
           path: artifacts/devtool.vsix
@@ -77,7 +78,7 @@ jobs:
     # 只有推送版本 tag 才真正发布；手动构建不会读取市场凭据。
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/vscode-v')
     needs: package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       # 一个市场失败时继续另一个市场；失败任务可独立重跑。
@@ -102,7 +103,7 @@ jobs:
           fi
 
       - name: 下载已验证的 VSIX
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: vscode-${{ github.ref_name }}
           path: artifacts
