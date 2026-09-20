@@ -1,2 +1,3 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 组件定义保留宿主的 Store 插件注入，业务无须额外配置。 */
 export { defineComponent } from '@miniprogramlab/core/runtime'

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 运行真实解析器验证跨文件定义，不依赖编辑器 UI 或执行用户工程代码。 */
 import assert from 'node:assert/strict'
 import { mkdtemp, mkdir, writeFile, rm, symlink, realpath } from 'node:fs/promises'
@@ -211,7 +212,7 @@ test('组件路径别名继承 tsconfig，注册调用支持导入别名和命�
   const files = {
     'tsconfig.base.json': '{"compilerOptions":{"baseUrl":".","paths":{"@ui/*":["components/*"]}}}',
     'tsconfig.json': '{"extends":"./tsconfig.base.json"}',
-    'index.config.ts': 'definePageConfig({ usingComponents: { "alias-card": "@ui/card", "namespace-card": "@ui/namespace" } })',
+    'index.config.ts': 'definePageConfig({ page: { name: "sample" }, config: { usingComponents: { "alias-card": "@ui/card", "namespace-card": "@ui/namespace" } } })',
     'components/card.ts': 'import { defineComponent as register } from "@miniprogramlab/core";\nexport const card = register({ properties: { titleText: String } })',
     'components/namespace.ts': 'import * as kit from "@miniprogramlab/core";\nkit.defineComponent({})',
     'index.wxml': '<alias-card ></alias-card><namespace-card/>',
@@ -293,13 +294,13 @@ test('异步组件配置支持常量、多层转发及未保存的占位配置',
   const files = {
     'routes.ts': 'export const asyncPath = "/async/card/index";',
     'registry.ts': 'export { asyncPath as cardPath } from "./routes";',
-    'index.config.ts': 'definePageConfig({ usingComponents: { "async-card": "./placeholder" } })',
+    'index.config.ts': 'definePageConfig({ page: { name: "sample" }, config: { usingComponents: { "async-card": "./placeholder" } } })',
     'async/card/index.ts': '/** 异步卡片。 */\nComponent({})',
     'placeholder.ts': 'Component({})',
     'index.wxml': '<async-card/>',
   }
   const env = await fixture(files, {
-    'index.config.ts': 'import { cardPath } from "./registry"; const components = { "async-card": cardPath }; definePageConfig({ usingComponents: { ...components }, componentPlaceholder: { "async-card": "view" } })',
+    'index.config.ts': 'import { cardPath } from "./registry"; const components = { "async-card": cardPath }; definePageConfig({ page: { name: "sample" }, config: { usingComponents: { ...components }, componentPlaceholder: { "async-card": "view" } } })',
   })
   env.definition('index.wxml', 'async-card', 'async/card/index.ts')
 })
@@ -325,10 +326,41 @@ test('组件入口穿透 ESM、CommonJS 及副作用转发，并沿实现补全�
   assert.ok(env.language.completion(path.join(env.root, 'index.wxml'), files['index.wxml'].indexOf('>')).some((item) => item.label === 'heading-text'))
 })
 
+test('分组页面配置支持任意文件名和同文件声明，模板仍读取运行时数据', async () => {
+  const files = {
+    'app.config.ts': 'defineAppConfig({})',
+    'settings.ts': 'definePageConfig({ page: { name: "home" }, config: { usingComponents: { "my-card": "./card" } } })',
+    'index.ts': 'definePage({ data: { count: 1 }, methods: { increase() {} } })',
+    'index.wxml': '<my-card/>',
+    'card.ts': 'defineComponent({ properties: { heading: String } })',
+  }
+  const separate = await fixture(files)
+  separate.definition('index.wxml', 'my-card', 'card.ts')
+  const inline = await fixture({ ...files, 'settings.ts': null, 'index.ts': files['settings.ts'] + '\n' + files['index.ts'] })
+  inline.definition('index.wxml', 'my-card', 'card.ts')
+  const members = inline.language.scripts.members(path.join(inline.root, 'index.ts'))
+  assert.ok(members.some((item) => item.name === 'count'))
+  assert.ok(members.some((item) => item.name === 'increase'))
+  // 同目录组件使用自身配置，不能被页面中的组件列表覆盖。
+  assert.equal(inline.language.scripts.components(path.join(inline.root, 'card.wxml')).has('my-card'), false)
+})
+
+test('尚未保存的独立页面配置也能提供组件跳转', async () => {
+  const env = await fixture({
+    'app.config.ts': 'defineAppConfig({})',
+    'index.ts': 'definePage({})',
+    'index.wxml': '<draft-card/>',
+    'card.ts': 'Component({})',
+  }, {
+    'draft.ts': 'definePageConfig({ page: { name: "home" }, config: { usingComponents: { "draft-card": "./card" } } })',
+  })
+  env.definition('index.wxml', 'draft-card', 'card.ts')
+})
+
 test('缺失或动态的局部组件覆盖全局注册，循环引用不跳无关占位组件', async () => {
   const files = {
     'app.config.ts': 'defineAppConfig({ usingComponents: { "missing-card": "./placeholder", "dynamic-card": "./placeholder" } })',
-    'index.config.ts': 'definePageConfig({ usingComponents: { "missing-card": "/async/not-downloaded", "dynamic-card": chooseComponent(), "loop-card": "./loop/a" }, componentPlaceholder: { "missing-card": "view" } })',
+    'index.config.ts': 'definePageConfig({ page: { name: "sample" }, config: { usingComponents: { "missing-card": "/async/not-downloaded", "dynamic-card": chooseComponent(), "loop-card": "./loop/a" }, componentPlaceholder: { "missing-card": "view" } } })',
     'placeholder.ts': 'Component({})',
     'loop/a.ts': 'export * from "./b";',
     'loop/b.ts': 'export * from "./a";',
@@ -430,7 +462,7 @@ test('未保存属性说明立即参与悬浮，原生属性和未知字段不�
   for (const name of ['unknown', 'class']) assert.equal(env.language.hover(file, files['index.wxml'].indexOf(name)), undefined)
 })
 
-test('真实 page-header 包中导入的 properties 提供原始中文注释与类型', async () => {
+test('Real page-header properties expose original documentation and types', async () => {
   const text = '<page-header title="示例" auto-back="{{true}}"/>'
   const { root, language } = await componentFixture({ 'index.wxml': text })
   const file = path.join(root, 'index.wxml')

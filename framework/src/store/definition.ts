@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreDefinition, StoreInitialState, StoreState } from './types.js'
 
 /** 纯定义的工厂保存在私有索引中，不随定义对象向业务暴露。 */

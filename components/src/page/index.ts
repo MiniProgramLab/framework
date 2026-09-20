@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { getWindowLayout } from '../lib/shared/window.js'
 import { headerProperties } from '../page-header/properties.js'
 import { createScrollIsolation } from '@miniprogramlab/core/store/plugins/overlay/adapters/index'

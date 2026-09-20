@@ -1,4 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
 import { createDefaultConfig, mergeTabBarConfig, visibleTabItems } from './config.js'
+import { installTabPageAdapter } from '@miniprogramlab/core/page/tab'
+import { createTabPageAdapter } from './page.js'
 import type {
   CustomTabAnimation,
   CustomTabBarConfig,
@@ -22,6 +25,13 @@ const stores = new WeakMap<object, TabBarStore>()
 /** 安装信息独立保存，用于校验动态配置及恢复默认值。 */
 const installations = new WeakMap<object, { config: CustomTabBarConfig; tabs: RegisteredTab[] }>()
 
+/** 安装时仅注册能力，页面挂载后才读取底栏状态。 */
+const tabPageAdapter = createTabPageAdapter({
+  snapshot: getTabBarSnapshot,
+  subscribe: (listener) => subscribeTabBar(listener, { configOnly: true }),
+  syncRoute: syncTabBarRoute,
+})
+
 /** 在首个 Tab 实例创建前安装路由，默认导航使用微信 switchTab。 */
 export function installTabBar(app: object, options: TabBarInstallation): void {
   if (stores.has(app)) throw new Error('底栏初始化后不能重新安装路由')
@@ -33,6 +43,7 @@ export function installTabBar(app: object, options: TabBarInstallation): void {
   const config = mergeTabBarConfig(createDefaultConfig(), { ...options.config, items: tabs })
   if (config.layout.position !== 'fixed' || visibleTabItems(config).length < 2)
     throw new Error('原生底栏须固定定位且至少保留两个可见导航项')
+  installTabPageAdapter(app, tabPageAdapter)
   installations.set(app, { config, tabs })
 }
 
@@ -159,7 +170,7 @@ export function configureTabBar(patch: CustomTabBarPatch): void {
       )
     ) {
       throw new Error(
-        `路由 ${item.id} 未注册，请先更新页面配置中的 route.tab 并重新构建`,
+        `路由 ${item.id} 未注册，请先更新页面配置中的 page.tabBar 并重新构建`,
       )
     }
   }
@@ -228,7 +239,7 @@ export function syncTabBarRoute(route: string): boolean {
 }
 
 /** 通过真实 switchTab 提交导航，失败时回滚选中并将错误交给调用方。 */
-export function navigateTab(
+export function navigateToTab(
   id: string,
   animation?: CustomTabAnimation,
 ): Promise<void> {

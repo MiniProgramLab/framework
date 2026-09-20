@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 关闭原因用于区分业务控制、用户取消和正常选择。 */
 export type OverlayCloseReason =
   | 'programmatic'

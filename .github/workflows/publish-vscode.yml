@@ -1,0 +1,114 @@
+name: 发布 VS Code 插件
+
+on:
+  push:
+    tags:
+      - 'vscode-v*'
+
+# 发布使用市场专属凭据，仓库令牌只需要读取源码。
+permissions:
+  contents: read
+
+# 同一个 tag 串行发布，避免重跑中断已经开始的上传。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    name: 校验并打包
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: 检出版本源码
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: 校验 tag 与插件版本
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+
+          // 只发布正式版本，版本号由已提交的插件清单决定。
+          const { version } = JSON.parse(readFileSync('vscode/package.json', 'utf8'))
+          const tag = process.env.GITHUB_REF_NAME
+          if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version)
+            || tag !== `vscode-v${version}`) {
+            throw new Error(`tag ${tag} 必须与 vscode/package.json 的正式版本一致：vscode-v${version}`)
+          }
+          console.log(`准备发布 miniprogramlab.devtool@${version}`)
+          NODE
+
+      - name: 按锁文件安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 验证插件语言功能
+        run: pnpm --filter devtool dev:test
+
+      # package 的 vscode:prepublish 钩子执行 dev:check，检查类型并构建扩展。
+      - name: 开发构建并打包 VSIX
+        run: |
+          mkdir -p artifacts
+          pnpm --filter devtool package --out ../artifacts/devtool.vsix
+
+      - name: 保存两个市场共用的 VSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-${{ github.ref_name }}
+          path: artifacts/devtool.vsix
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: 发布到 ${{ matrix.marketplace }}
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      # 一个市场失败时继续另一个市场；失败任务可独立重跑。
+      fail-fast: false
+      matrix:
+        include:
+          - marketplace: Visual Studio Marketplace
+            registry: https://marketplace.visualstudio.com
+            secret: VSCE_PAT
+          - marketplace: Open VSX
+            registry: https://open-vsx.org
+            secret: OVSX_PAT
+    steps:
+      - name: 检查发布凭据
+        env:
+          RELEASE_TOKEN: ${{ secrets[matrix.secret] }}
+          RELEASE_SECRET_NAME: ${{ matrix.secret }}
+        run: |
+          if [ -z "$RELEASE_TOKEN" ]; then
+            echo "::error::请在仓库 Actions Secrets 中配置 $RELEASE_SECRET_NAME"
+            exit 1
+          fi
+
+      - name: 下载已验证的 VSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: vscode-${{ github.ref_name }}
+          path: artifacts
+
+      - name: 发布已有 VSIX
+        # 固定发布动作到 v2.0.0 对应提交，发布任务不执行仓库构建脚本。
+        uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db
+        with:
+          pat: ${{ secrets[matrix.secret] }}
+          registryUrl: ${{ matrix.registry }}
+          extensionFile: artifacts/devtool.vsix
+          # 全部重跑时跳过已经成功发布的同版本，不覆盖市场中的包。
+          skipDuplicate: true

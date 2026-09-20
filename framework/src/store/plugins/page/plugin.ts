@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { definitionFactory } from '../../definition.js'
 import { defineStorePlugin } from '../../plugin.js'
 import type { StoreState } from '../../types.js'

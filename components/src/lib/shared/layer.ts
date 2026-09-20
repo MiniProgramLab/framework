@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { createOverlayController } from './controller.js'
 import type { OverlayController } from './controller.js'
 import type { OverlayCloseReason } from '../overlay/types.js'

@@ -1,30 +1,37 @@
 {
   "name": "@miniprogramlab/core",
   "version": "0.1.0",
-  "description": "微信小程序组件封装与可插拔 Store 框架",
+  "description": "小程序运行时、可插拔 Store 与编译期选择平台的类型化路由",
   "type": "module",
   "files": [
     "src",
     "README.md",
-    "tsconfig.json"
+    "README.en.md",
+    "tsconfig.json",
+    "LICENSE",
+    "NOTICE"
   ],
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json",
     "./*": "./src/*.ts",
     "./globals": "./src/globals.d.ts",
-    "./config": "./src/config.d.ts"
+    "./config": "./src/config.d.ts",
+    "./router": "./src/router/index.ts",
+    "./router/types": "./src/router/types.d.ts"
   },
   "scripts": {
     "dev": "tsc --noEmit --watch",
     "dev:check": "tsc --noEmit",
     "build": "pnpm dev:check",
     "typecheck": "tsc --noEmit",
-    "prepack": "pnpm dev:check"
+    "prepack": "pnpm dev:check",
+    "dev:test": "pnpm dev:check && node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "typescript": "catalog:",
-    "miniprogram-api-typings": "catalog:"
+    "miniprogram-api-typings": "catalog:",
+    "esbuild": "catalog:"
   },
   "peerDependencies": {
     "miniprogram-api-typings": ">=5.2.3"
@@ -32,7 +39,7 @@
   "engines": {
     "node": ">=22"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MiniProgramLab/framework.git",

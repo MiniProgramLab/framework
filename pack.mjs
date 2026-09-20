@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 将三个 npm 包和编辑器 VSIX 写入统一交付目录，不执行远程发布。 */
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync } from 'node:fs'
@@ -13,8 +14,8 @@ for (const name of ['@miniprogramlab/core', '@miniprogramlab/ui', '@miniprograml
   if (result.error) throw result.error
   if (result.status !== 0) process.exit(result.status || 1)
 }
-/** VSIX 文件名跟随扩展自身版本，独立于三个 npm 包的版本。 */
+/** VSIX 文件名和筛选条件直接使用扩展元数据，避免包名再次分歧。 */
 const extension = JSON.parse(readFileSync(new URL('./vscode/package.json', import.meta.url), 'utf8'))
-const result = spawnSync(process.execPath, [pnpm, '--filter', 'skyline-kit-vscode', 'package', '--out', artifacts + '/skyline-kit-vscode-' + extension.version + '.vsix'], { stdio: 'inherit' })
+const result = spawnSync(process.execPath, [pnpm, '--filter', extension.name, 'package', '--out', artifacts + '/' + extension.name + '-' + extension.version + '.vsix'], { stdio: 'inherit' })
 if (result.error) throw result.error
 process.exitCode = result.status || 0

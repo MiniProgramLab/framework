@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreState, StoreValue } from './types.js'
 
 /** 原生 setData 可能保留对象引用，展示副本不能与内部不可变状态共享可写对象。 */

@@ -1,6 +1,7 @@
 # 子包在独立仓库与宿主项目中使用相同的目录布局。
 packages:
   - cli
+  - checks
   - components
   - framework
   - vscode

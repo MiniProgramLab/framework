@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { ComponentValue } from '../shared/types.js'
 
 /** 每个选项携带业务值，调用方不依赖展示下标。 */

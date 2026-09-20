@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 自定义导航和页面内容所需的设备尺寸，均使用逻辑像素。 */
 export interface WindowLayout {
   /** 当前可见窗口高度，作为页面弹性布局的明确边界。 */

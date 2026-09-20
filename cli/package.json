@@ -1,44 +1,60 @@
 {
   "name": "@miniprogramlab/cli",
   "version": "0.1.0",
-  "description": "Skyline 微信小程序专用构建 CLI",
+  "description": "支持微信、抖音和支付宝适配器的小程序构建 CLI",
   "type": "module",
   "bin": {
-    "skyline": "bin/skyline.mjs"
+    "miniprogram": "bin/miniprogram.mjs"
   },
   "exports": {
     ".": {
-      "types": "./src/options.d.ts",
-      "default": "./src/options.mjs"
+      "types": "./dist/src/options.d.ts",
+      "default": "./dist/src/options.js"
     },
-    "./*": "./src/*.mjs",
-    "./package.json": "./package.json"
+    "./*": {
+      "types": "./dist/src/*.d.ts",
+      "default": "./dist/src/*.js"
+    },
+    "./package.json": "./package.json",
+    "./register": "./bin/register.mjs"
   },
   "files": [
-    "bin",
-    "src",
+    "bin/miniprogram.mjs",
+    "bin/register.mjs",
+    "dist/bin/miniprogram.js",
+    "dist/bin/miniprogram.js.map",
+    "dist/bin/miniprogram.d.ts",
+    "dist/src",
     "README.md",
-    "scripts"
+    "README.en.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "dev:check": "node scripts/check.mjs",
+    "dev:check": "tsc -p tsconfig.json",
     "build": "pnpm dev:check",
-    "prepack": "pnpm dev:check"
+    "prepack": "pnpm dev:check",
+    "dev:test": "pnpm dev:check && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "dotenv": "catalog:",
     "esbuild": "catalog:",
+    "less": "4.4.1",
     "sass": "catalog:",
     "typescript": "catalog:",
-    "less": "4.4.1"
+    "@miniprogramlab/core": "workspace:*"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MiniProgramLab/framework.git",
     "directory": "cli"
+  },
+  "devDependencies": {
+    "@types/less": "^3.0.8",
+    "@types/node": "^22.15.30"
   }
 }

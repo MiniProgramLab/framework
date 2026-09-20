@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import fs from 'node:fs'
 import path from 'node:path'
 import { createRequire } from 'node:module'
@@ -73,6 +74,16 @@ export class Project {
     if (text === undefined) return undefined
     if (!this.sources.has(file)) this.sources.set(file, ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true))
     return this.sources.get(file)
+  }
+
+  /** 仅枚举当前目录脚本，包含尚未落盘的编辑器文档，不递归借用子目录配置。 */
+  siblingScripts(directory: string): string[] {
+    const files = new Set<string>()
+    try {
+      for (const item of fs.readdirSync(directory, { withFileTypes: true })) if (item.isFile()) files.add(path.join(directory, item.name))
+    } catch { /* 编辑中的新目录可能尚未创建。 */ }
+    for (const file of this.options.documents?.keys() ?? []) if (path.dirname(file) === directory) files.add(file)
+    return [...files].filter((file) => /\.[cm]?[jt]s$/.test(file) && !/\.d\.[cm]?ts$/.test(file)).sort().slice(0, this.maxFiles)
   }
 
   /** 读取最近的 tsconfig，包括 extends 与 paths；无需枚举项目文件。 */

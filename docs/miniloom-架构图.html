@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
@@ -6,8 +7,8 @@
   <meta name="generator" content="archify 2.7.0">
   <title>MiniLoom · 织微小程序开发框架 Diagram</title>
   <script>
-    // Resolve the theme before first paint so light-preference users don't
-    // see a dark flash. The toolbar script below re-applies with UI state.
+    // 首次绘制前确定主题，避免偏好浅色的用户
+    // 看到深色闪烁；下方工具栏脚本会同步界面状态。
     (function () {
       try {
         var theme = null;
@@ -25,8 +26,8 @@
       } catch (_) {}
     })();
   </script>
-  <!-- Async font load: a blackholed network must not block first paint.
-       The body font stack falls back to system monospace until it lands. -->
+  <!-- 异步加载字体，避免网络无响应时阻塞首次绘制。
+       字体加载完成前，正文使用系统等宽字体。 -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet" media="print" onload="this.media='all'">
@@ -34,9 +35,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   </noscript>
   <style>
-    /* ==========================================================
-       THEME VARIABLES — switch by toggling [data-theme] on <html>
-       ========================================================== */
+    /* 主题变量：通过 <html> 的 data-theme 属性切换。 */
     :root,
     [data-theme="dark"] {
       --bg: #020617;
@@ -44,7 +43,7 @@
       --text: #ffffff;
       --text-muted: #94a3b8;
       --text-dim: #475569;
-      /* UI chrome (menu hints, footer) needs more contrast than SVG .t-dim accents */
+      /* 菜单提示、页脚等界面文字需要比 SVG 的 .t-dim 装饰文字更高的对比度。 */
       --text-faint: #7d8da1;
 
       --panel: rgba(15, 23, 42, 0.5);
@@ -55,8 +54,7 @@
       --arrow: #64748b;
       --arrow-emphasis: #34d399;
 
-      /* Opaque mask color used behind semi-transparent component fills
-         so the arrows drawn underneath are properly hidden. */
+      /* 在半透明组件填充下铺设不透明遮罩，隐藏下方箭头。 */
       --mask: #0f172a;
 
       --frontend-fill:    rgba(8, 51, 68, 0.4);
@@ -234,18 +232,13 @@
       font-size: 0.75rem;
     }
 
-    /* ==========================================================
-       Print stylesheet — hide interactive controls, force light,
-       drop the grid so the diagram doesn't waste ink, use landscape
-       so wide diagrams fit, pack summary cards into 2 columns to
-       avoid an orphan card on a trailing page.
-       ========================================================== */
+    /* 打印时隐藏交互控件，强制浅色并移除网格以节省墨水；
+       使用横向页面容纳宽图，摘要卡片排为两列，避免末页只剩一张卡片。 */
     @page { size: landscape; margin: 1.5cm; }
 
     @media print {
-      /* Force the FULL light palette — including component fills/strokes and
-         lane/arrow colors — so printing from dark theme doesn't put neon
-         strokes and translucent dark fills on white paper. */
+      /* 强制使用完整浅色配色，包括组件填充、描边、泳道和箭头，
+         避免深色主题打印时在白纸上出现荧光描边和半透明深色填充。 */
       :root, [data-theme="dark"], [data-theme="light"] {
         --bg: #ffffff;
         --grid: transparent;
@@ -280,15 +273,13 @@
       .toolbar, .archify-toast, .no-print { display: none !important; }
       .diagram-container, .card { box-shadow: none; border-color: #e2e8f0; }
       .cards { grid-template-columns: 1fr 1fr; }
-      /* Ensure elements break sensibly across pages */
+      /* 确保元素在分页时合理断开。 */
       .card { break-inside: avoid; page-break-inside: avoid; }
       .diagram-container { break-inside: avoid; page-break-inside: avoid; }
       h1, .subtitle { color: #0f172a; }
     }
 
-    /* ==========================================================
-       TOOLBAR (theme toggle + export menu)
-       ========================================================== */
+    /* 工具栏：主题切换与导出菜单。 */
     .toolbar {
       position: fixed;
       top: 1rem;
@@ -358,7 +349,7 @@
       opacity: 0.5;
     }
 
-    /* Toast — brief feedback for actions like "copied" */
+    /* 操作提示：短暂显示复制等操作的反馈。 */
     .archify-toast {
       position: fixed;
       top: 1rem;
@@ -413,9 +404,7 @@
       }
     }
 
-    /* ==========================================================
-       SVG SEMANTIC CLASSES — use these instead of inline fill/stroke
-       ========================================================== */
+    /* SVG 语义类：替代内联填充和描边属性。 */
     .c-grid       { stroke: var(--grid); fill: none; }
     .c-mask       { fill: var(--mask); stroke: none; }
 
@@ -427,7 +416,7 @@
     .c-messagebus { fill: var(--messagebus-fill); stroke: var(--messagebus-stroke); }
     .c-external   { fill: var(--external-fill);   stroke: var(--external-stroke); }
 
-    /* Text helpers */
+    /* 文字辅助样式。 */
     .t-primary { fill: var(--text); }
     .t-muted   { fill: var(--text-muted); }
     .t-dim     { fill: var(--text-dim); }
@@ -439,27 +428,27 @@
     .t-messagebus { fill: var(--messagebus-stroke); }
     .t-external   { fill: var(--external-stroke); }
 
-    /* Arrows */
+    /* 箭头样式。 */
     .a-default   { stroke: var(--arrow); fill: none; }
     .a-emphasis  { stroke: var(--arrow-emphasis); fill: none; }
     .a-security  { stroke: var(--security-stroke); fill: none; stroke-dasharray: 5,5; }
     .a-dashed    { stroke: var(--database-stroke); fill: none; stroke-dasharray: 4,4; }
 
-    /* Arrowhead markers reference these */
+    /* 箭头端点标记使用这些样式。 */
     .m-default   { fill: var(--arrow); }
     .m-emphasis  { fill: var(--arrow-emphasis); }
     .m-security  { fill: var(--security-stroke); }
     .m-dashed    { fill: var(--database-stroke); }
 
-    /* Dashed boundary variants */
+    /* 虚线边界变体。 */
     .c-security-group { fill: transparent; stroke: var(--security-stroke); stroke-dasharray: 4,4; }
     .c-region         { fill: rgba(251, 191, 36, 0.05); stroke: var(--cloud-stroke); stroke-dasharray: 8,4; }
     .c-lane           { fill: var(--lane-fill); stroke: var(--lane-stroke); stroke-dasharray: 6,6; }
   </style>
 </head>
 <body>
-  <!-- Toolbar: theme toggle + export menu (present on every generated diagram)
-       Keyboard: T toggles theme, E opens export menu (when no input focused) -->
+  <!-- 工具栏：每张生成的图都包含主题切换和导出菜单。
+       未聚焦输入框时，按 T 切换主题，按 E 打开导出菜单。 -->
   <div class="toolbar" role="toolbar" aria-label="Diagram actions">
     <button id="btn-theme" type="button"
             title="Toggle theme (T)"
@@ -490,7 +479,7 @@
   </div>
 
   <div class="container">
-    <!-- Header -->
+    <!-- 页头。 -->
     <div class="header">
       <div class="header-row">
         <div class="pulse-dot"></div>
@@ -499,10 +488,10 @@
       <p class="subtitle">首期微信 Skyline；平台、渲染与功能按契约注册。箭头表示调用或向宿主提供实现。</p>
     </div>
 
-    <!-- Main Diagram -->
+    <!-- 主图。 -->
     <div class="diagram-container">
       <svg viewBox="0 0 1240 990" role="img" aria-label="MiniLoom · 织微小程序开发框架 — 首期微信 Skyline；平台、渲染与功能按契约注册。箭头表示调用或向宿主提供实现。 (architecture diagram)">
-        <!-- Definitions -->
+        <!-- 可复用定义。 -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
@@ -521,10 +510,10 @@
           </pattern>
         </defs>
 
-        <!-- Background Grid -->
+        <!-- 背景网格。 -->
         <rect width="100%" height="100%" fill="url(#grid)" />
 
-        <!-- Boundaries (behind everything) -->
+        <!-- 边界位于所有元素下方。 -->
         <rect x="50" y="70" width="1120" height="126" rx="12" class="c-region" stroke-width="1"/>
         <text x="58" y="88" class="t-cloud" font-size="9" font-weight="600">小程序运行时 · 只装配被选中的目标实现</text>
 
@@ -534,7 +523,7 @@
         <rect x="50" y="530" width="1120" height="126" rx="12" class="c-region" stroke-width="1"/>
         <text x="58" y="548" class="t-cloud" font-size="9" font-weight="600">编辑器环境 · 静态分析与独立语言服务</text>
 
-        <!-- Connection paths (before components for correct z-order) -->
+        <!-- 先绘制连线，再绘制组件，以保持正确的层叠顺序。 -->
         <path d="M 260 138 L 350 138" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path d="M 530 138 L 620 138" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         <path d="M 930 138 L 830 138" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
@@ -545,7 +534,7 @@
         <path d="M 530 598 L 620 598" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         <path d="M 930 598 L 830 598" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
 
-        <!-- Components -->
+        <!-- 组件。 -->
         <rect x="80" y="100" width="180" height="76" rx="6" class="c-mask"/>
         <rect x="80" y="100" width="180" height="76" rx="6" class="c-frontend" stroke-width="1.5"/>
         <text x="170" y="136" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">业务与通用组件</text>
@@ -611,7 +600,7 @@
         <text x="620" y="831" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">共享协议 contracts · 三类宿主独立实例化</text>
         <text x="620" y="847" class="t-muted" font-size="9" text-anchor="middle">目标 / 能力 / 诊断 / 组件清单 / 端口；无 Node、编辑器或微信依赖</text>
 
-        <!-- Connection labels -->
+        <!-- 连线标签。 -->
 
 
         <rect x="855.8" y="118" width="48.4" height="14" rx="3" class="c-mask"/>
@@ -626,7 +615,7 @@
         <rect x="851" y="578" width="58" height="14" rx="3" class="c-mask"/>
         <text x="880" y="588" class="t-muted" font-size="8" text-anchor="middle">规则与数据</text>
 
-        <!-- Legend -->
+        <!-- 图例。 -->
         <text x="40" y="961" class="t-primary" font-size="9" font-weight="600">Legend</text>
         <rect x="40" y="966" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
         <text x="60" y="974" class="t-muted" font-size="8">Frontend</text>
@@ -641,7 +630,7 @@
       </svg>
     </div>
 
-    <!-- Info Cards -->
+    <!-- 信息卡片。 -->
     <div class="cards">
       <div class="card">
         <div class="card-header">
@@ -679,16 +668,14 @@
       </div>
     </div>
 
-    <!-- Footer -->
+    <!-- 页脚。 -->
     <p class="footer">
       Architecture diagram &bull; Built with Archify<span class="no-print"> &bull; Press <kbd>T</kbd> for theme and <kbd>E</kbd> for export</span>
     </p>
   </div>
 
   <script>
-    /* ============================================================
-       Theme toggle — persists to localStorage, respects system pref
-       ============================================================ */
+    /* 主题切换：持久化到 localStorage，并遵循系统偏好。 */
     var Archify = {};
 
     Archify.theme = (function () {
@@ -698,8 +685,8 @@
       var icon = document.getElementById('theme-icon');
       var label = document.getElementById('theme-label');
 
-      // localStorage can throw (blocked cookies, sandboxed iframes); the whole
-      // script element dies on an uncaught error, so guard every access.
+      // 禁用 Cookie 或使用沙箱 iframe 时，localStorage 可能抛出异常；
+      // 未捕获异常会中断整个脚本，因此每次访问都需要保护。
       function readStored() {
         try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
       }
@@ -707,7 +694,7 @@
         try { localStorage.setItem(STORAGE_KEY, value); } catch (_) {}
       }
       function urlOverride() {
-        // URL param wins (useful for deterministic screenshots / share links)
+        // URL 参数优先，便于生成固定主题的截图和分享链接。
         try {
           var param = new URLSearchParams(window.location.search).get('theme');
           if (param === 'light' || param === 'dark') return param;
@@ -739,7 +726,7 @@
       apply(resolveInitial());
       btn.addEventListener('click', toggle);
 
-      // Follow live OS theme changes while the user has no explicit preference.
+      // 用户未显式选择主题时，跟随系统主题的实时变化。
       try {
         var media = window.matchMedia('(prefers-color-scheme: light)');
         var onChange = function (e) {
@@ -754,18 +741,10 @@
       return { toggle: toggle };
     })();
 
-    /* ============================================================
-       Export — PNG / JPEG / WebP / SVG (download) and Copy PNG (clipboard)
-
-       Raster exports are always rendered at 4x source resolution for
-       maximum sharpness. The trick: we set the serialized SVG's
-       `width`/`height` to viewBox * 4 so the browser rasterizes the
-       vectors at that resolution natively. drawImage then draws at
-       the image's natural size (no upscaling = no blur).
-
-       JPEG/WebP paint the current theme's background explicitly since
-       those formats have no alpha channel.
-       ============================================================ */
+    /* 导出 PNG、JPEG、WebP、SVG，或将 PNG 复制到剪贴板。
+       栅格导出默认使用四倍源分辨率：将序列化 SVG 的宽高设为 viewBox 的四倍，
+       让浏览器直接以目标分辨率栅格化，再由 drawImage 按原始尺寸绘制，避免放大模糊。
+       JPEG 和 WebP 导出时显式绘制当前主题背景。 */
     (function () {
       var RASTER_SCALE = 4;
 
@@ -784,22 +763,14 @@
       }
 
       /**
-       * Serialize the main SVG into a standalone document.
-       *
-       * Two modes:
-       * - Default (opts.autoTheme=false) — locks the serialized SVG to the
-       *   viewer's current theme. Used by the raster pipeline
-       *   (PNG/JPEG/WebP/clipboard) because canvas rasterization needs
-       *   deterministic colors; a raster cannot react to
-       *   prefers-color-scheme after encoding.
-       * - autoTheme=true — emits BOTH dark and light variable sets plus a
-       *   `@media (prefers-color-scheme)` rule so the resulting SVG
-       *   self-themes when embedded in GitHub READMEs or other hosts that
-       *   expose a color scheme. Used for "Download SVG".
+       * 将主 SVG 序列化为独立文档。
+       * 默认模式锁定当前主题，供 PNG、JPEG、WebP 和剪贴板使用，确保栅格颜色稳定。
+       * autoTheme=true 时同时输出深浅主题变量和 prefers-color-scheme 媒体查询，
+       * 让下载的 SVG 在 GitHub README 等支持主题的宿主中自动适配。
        */
       function serializeSvg(scale, opts) {
-        // scale: integer multiplier for intrinsic SVG pixel dimensions used by
-        // the raster path. Defaults to 1 (natural size) for SVG download.
+        // scale 是栅格导出所用 SVG 固有像素尺寸的整数倍率；
+        // 下载 SVG 时默认取 1，保留原始尺寸。
         scale = scale || 1;
         opts = opts || {};
         var autoTheme = opts.autoTheme === true;
@@ -808,25 +779,25 @@
         var clone = svg.cloneNode(true);
 
         var vb = svg.viewBox.baseVal;
-        // Scale width/height so the browser rasterizes the vectors at target
-        // resolution directly. viewBox stays unchanged so coordinates don't
-        // shift. This is the key to sharp rasters — do NOT scale later via
-        // canvas upscaling.
+        // 缩放宽高，让浏览器直接按目标分辨率栅格化；
+        // viewBox 保持不变，确保坐标位置不发生偏移。
+        // 清晰栅格的关键在于直接按目标尺寸渲染，
+        // 不要再通过画布放大。
         clone.setAttribute('width', vb.width * scale);
         clone.setAttribute('height', vb.height * scale);
         clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-        // Only the SVG-relevant rules: semantic classes, markers, and the
-        // theme variable blocks. Toolbar/cards/print CSS can never apply
-        // inside a standalone SVG and would only bloat the export.
+        // 只保留与 SVG 有关的语义类、标记和主题变量规则；
+        // 工具栏、卡片和打印样式在独立 SVG 中不起作用，
+        // 保留它们只会增大导出文件。
         var hostStyle = (function () {
           var out = [];
           Array.prototype.forEach.call(document.styleSheets, function (sheet) {
             var rules;
-            try { rules = sheet.cssRules; } catch (_) { return; } // cross-origin
+            try { rules = sheet.cssRules; } catch (_) { return; } // 忽略无法读取的跨域样式表。
             if (!rules) return;
             Array.prototype.forEach.call(rules, function (rule) {
-              if (rule.type !== 1) return; // plain style rules only
+              if (rule.type !== 1) return; // 仅处理普通样式规则。
               var sel = rule.selectorText || '';
               if (/(^|,)\s*(svg|:root|\[data-theme|\.c-|\.t-|\.a-|\.m-)/.test(sel)) {
                 out.push(rule.cssText);
@@ -836,9 +807,9 @@
           return out.join('\n');
         })();
 
-        // Derive the variable list from the stylesheet so newly added theme
-        // variables can never be missed by the export pipeline again
-        // (--lane-fill/--lane-stroke once were).
+        // 从样式表提取变量列表，避免导出流程遗漏
+        // 后续新增的主题变量；
+        // 此前曾遗漏 --lane-fill 和 --lane-stroke。
         var varNames = (function () {
           var seen = {};
           var names = [];
@@ -848,8 +819,8 @@
           return names;
         })();
 
-        // Resolve the full variable set for a given data-theme via an
-        // off-DOM probe, independent of what the viewer is currently set to.
+        // 使用离屏探测元素解析指定 data-theme 的全部变量，
+        // 不受查看器当前主题的影响。
         function resolveVars(themeAttr) {
           var probe = document.createElement('div');
           probe.setAttribute('data-theme', themeAttr);
@@ -865,12 +836,12 @@
           }
         }
 
-        // Prepend a local()-only @font-face block for each weight so that the
-        // sandboxed image-rendering context used during PNG/JPEG/WebP export
-        // can find JetBrains Mono if the user has it installed locally, and
-        // falls through cleanly to the monospace stack otherwise. The usual
-        // Google-Fonts <link> in the host document is unreachable from the
-        // serialized SVG, so url()-sourced faces would just hang.
+        // 为各字重添加仅使用 local() 的 @font-face 规则，
+        // 让 PNG、JPEG、WebP 导出的沙箱图像渲染环境
+        // 可以使用本机已安装的 JetBrains Mono；
+        // 未安装时正常回退到系统等宽字体。
+        // 序列化 SVG 无法访问宿主文档中的 Google Fonts 链接，
+        // 因此使用 url() 加载字体会导致等待。
         var fontFallback = [400, 500, 600, 700].map(function (w) {
           return "@font-face { font-family: 'JetBrains Mono'; font-weight: " + w +
                  "; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }";
@@ -882,10 +853,10 @@
         bgRect.setAttribute('height', '100%');
 
         if (autoTheme) {
-          // Dual-theme SVG. Dark is the default (so hosts without
-          // prefers-color-scheme still render), light swaps in via media
-          // query, and svg[data-theme="..."] still lets downstream
-          // consumers force a specific theme.
+          // 双主题 SVG 默认使用深色，确保不支持
+          // prefers-color-scheme 的宿主仍可显示；浅色通过媒体查询切换，
+          // 下游使用方也可以通过 svg[data-theme="..."]
+          // 强制指定主题。
           var darkVars = resolveVars('dark');
           var lightVars = resolveVars('light');
 
@@ -899,13 +870,13 @@
             "svg[data-theme=\"dark\"] { " + darkVars + " }\n" +
             "rect.c-bg-rect { fill: var(--bg); }\n";
 
-          // Don't lock the serialized SVG to the viewer's current theme.
+          // 不将序列化 SVG 锁定为查看器当前主题。
           clone.removeAttribute('data-theme');
-          // Background follows the CSS variable, not a fixed color, so it
-          // swaps with the media query.
+          // 背景使用 CSS 变量而非固定颜色，
+          // 以便随媒体查询切换。
           bgRect.setAttribute('class', 'c-bg-rect');
         } else {
-          // Raster path: lock to the viewer's current theme.
+          // 栅格导出固定使用查看器当前主题。
           var theme = document.documentElement.getAttribute('data-theme') || 'dark';
           var themeHost = document.querySelector('[data-theme="' + theme + '"]') || document.documentElement;
           var computed = getComputedStyle(themeHost);
@@ -913,10 +884,10 @@
             return n + ': ' + computed.getPropertyValue(n).trim() + ';';
           }).join(' ');
 
-          // IMPORTANT: inject the resolved variables AFTER hostStyle,
-          // otherwise hostStyle's ":root, [data-theme=\"dark\"] { ... }" rule
-          // overrides our chosen theme via later-in-cascade equal-specificity.
-          // Keep this order.
+          // 必须在 hostStyle 之后注入已解析的变量，
+          // 否则 hostStyle 中的 ":root, [data-theme=\"dark\"] { ... }" 规则
+          // 会凭借相同优先级下的后置顺序覆盖所选主题。
+          // 保持此顺序。
           style.textContent =
             fontFallback + "\n" +
             "svg { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace; }\n" +
@@ -947,11 +918,11 @@
         setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
       }
 
-      // Conservative upper bound on total canvas pixels. Older Safari on iOS
-      // silently produces a blank canvas above ~16 Mpx; Chrome / Firefox /
-      // desktop Safari are far higher but start failing on memory-constrained
-      // devices. We pick the largest integer scale in {4,3,2,1} whose target
-      // pixel count fits under this cap.
+      // 保守限制画布总像素数：旧版 iOS Safari 超过约 1600 万像素时
+      // 会静默生成空白画布；Chrome、Firefox 和桌面 Safari
+      // 的上限更高，但在内存受限的设备上也可能失败。
+      // 从 {4,3,2,1} 中选择目标像素数不超过上限的
+      // 最大整数倍率。
       var MAX_CANVAS_PIXELS = 16 * 1024 * 1024;
 
       function pickSafeScale(vbW, vbH) {
@@ -962,10 +933,10 @@
       }
 
       function rasterize(format) {
-        // Serialize at a safe scale (RASTER_SCALE=4 by default, reduced if the
-        // resulting canvas would exceed MAX_CANVAS_PIXELS). The SVG itself is
-        // rasterized at target resolution natively; drawImage draws at natural
-        // size — no upsampling blur.
+        // 按安全倍率序列化，默认 RASTER_SCALE=4；
+        // 若画布超过 MAX_CANVAS_PIXELS，则降低倍率。
+        // SVG 直接以目标分辨率栅格化，drawImage 按原始尺寸绘制，
+        // 避免放大导致模糊。
         var svg = document.querySelector('.diagram-container svg');
         var vb = svg.viewBox.baseVal;
         var scale = pickSafeScale(vb.width, vb.height);
@@ -984,7 +955,7 @@
               ctx.fillStyle = currentBg();
               ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
-            // Draw at natural size — SVG was already rasterized at target res.
+            // SVG 已按目标分辨率栅格化，直接以原始尺寸绘制。
             ctx.drawImage(img, 0, 0);
             URL.revokeObjectURL(svgUrl);
             var mime = format === 'jpeg' ? 'image/jpeg' :
@@ -1009,16 +980,16 @@
         return Array.prototype.slice.call(menu.querySelectorAll('button[role="menuitem"]'));
       };
 
-      // ---- Clipboard support ----------------------------------------------
+      // 剪贴板支持。
       function canCopyImage() {
         return typeof ClipboardItem !== 'undefined' &&
                navigator.clipboard &&
                typeof navigator.clipboard.write === 'function';
       }
 
-      // ---- Raster format detection ----------------------------------------
-      // canvas.toBlob('image/webp') silently returns a PNG on browsers without
-      // WebP encoding (older Safari), so detect explicitly.
+      // 栅格格式检测。
+      // 不支持 WebP 编码的浏览器（如旧版 Safari）调用 canvas.toBlob('image/webp')
+      // 时会静默返回 PNG，因此必须显式检测。
       function supports(format) {
         if (format === 'svg' || format === 'png') return true;
         var mime = format === 'jpeg' ? 'image/jpeg' : 'image/webp';
@@ -1029,7 +1000,7 @@
         } catch (_) { return false; }
       }
 
-      // Gray out unsupported items.
+      // 将不支持的选项置灰。
       items().forEach(function (it) {
         if (it.dataset.format && !supports(it.dataset.format)) {
           it.disabled = true;
@@ -1043,9 +1014,9 @@
         }
       });
 
-      // ---- Toast ----------------------------------------------------------
-      // A live region only announces CHANGES to an existing node, so the toast
-      // element is created once up front and updated in place.
+      // 操作提示。
+      // 无障碍实时区域只播报已有节点的变化，
+      // 因此预先创建提示节点，后续原地更新内容。
       var toastEl = document.createElement('div');
       toastEl.className = 'archify-toast';
       toastEl.setAttribute('role', 'status');
@@ -1081,7 +1052,7 @@
         if (isOpen()) close(false);
         else open();
       });
-      // APG menu-button pattern: ArrowDown/ArrowUp on the trigger opens the menu.
+      // 遵循 APG 菜单按钮模式：在触发按钮上按上下方向键打开菜单。
       btn.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
@@ -1092,9 +1063,9 @@
         if (!menu.contains(e.target) && e.target !== btn) close(false);
       });
 
-      // Keyboard navigation inside the menu.
-      //   Menu items: Up/Down, Home/End.
-      //   Esc closes + returns focus to trigger; Tab closes.
+      // 菜单内部的键盘导航。
+      // 菜单项支持上下方向键以及 Home、End 键。
+      // Esc 关闭菜单并将焦点返回触发按钮；Tab 关闭菜单。
       menu.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { e.preventDefault(); close(true); return; }
         if (e.key === 'Tab')    { close(false); return; }
@@ -1143,10 +1114,10 @@
           alert('Clipboard image write not supported in this browser.');
           return;
         }
-        // WebKit requires ClipboardItem to be constructed synchronously inside
-        // the user gesture — pass the pending Promise<Blob> as the item value.
-        // Browsers that reject promise values throw synchronously; fall back
-        // to awaiting the blob first (works in Chromium/Firefox).
+        // WebKit 要求在用户手势回调中同步构造 ClipboardItem，
+        // 因此将待完成的 Promise<Blob> 作为条目值传入。
+        // 不接受 Promise 值的浏览器会同步抛出异常，
+        // 此时先等待 Blob，再构造条目，兼容 Chromium 和 Firefox。
         var blobPromise = rasterize('png');
         var writePromise;
         try {
@@ -1174,10 +1145,10 @@
 
       Archify.exportMenu = { open: open, close: close, isOpen: isOpen, run: runExport };
 
-      // Auto-open on page load for demo/screenshot purposes: ?openExport=1
-      // Wait for fonts (so the menu doesn't flash before typography lands)
-      // and paint before opening. Fallback timeout for browsers without the
-      // Font Loading API.
+      // 页面加载时可通过 ?openExport=1 自动打开菜单，便于演示和截图。
+      // 等待字体加载和页面绘制后再打开菜单，避免字体切换闪烁；
+      // 对不支持字体加载接口的浏览器，
+      // 使用超时作为兜底。
       try {
         if (new URLSearchParams(window.location.search).get('openExport') === '1') {
           var openWhenReady = function () {
@@ -1192,12 +1163,8 @@
       } catch (_) {}
     })();
 
-    /* ============================================================
-       Global keyboard shortcuts
-         T -> toggle theme
-         E -> open export menu
-       Ignored when focus is inside an input/textarea/contenteditable.
-       ============================================================ */
+    /* 全局快捷键：T 切换主题，E 打开导出菜单。
+       焦点位于 input、textarea 或可编辑元素内时忽略。 */
     document.addEventListener('keydown', function (e) {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       var t = e.target;

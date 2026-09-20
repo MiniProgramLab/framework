@@ -6,7 +6,10 @@
   "files": [
     "src",
     "README.md",
-    "tsconfig.json"
+    "README.en.md",
+    "tsconfig.json",
+    "LICENSE",
+    "NOTICE"
   ],
   "exports": {
     ".": "./src/index.ts",
@@ -34,7 +37,7 @@
     "node": ">=22"
   },
   "miniprogram": "src",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MiniProgramLab/framework.git",

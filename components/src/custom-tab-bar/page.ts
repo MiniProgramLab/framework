@@ -1,63 +1,40 @@
-import {
-  getTabBarSnapshot,
-  subscribeTabBar,
-  syncTabBarRoute,
-} from './controller.js'
+// SPDX-License-Identifier: Apache-2.0
+import type { TabPageAdapter } from '@miniprogramlab/core/page/tab'
 import type { NativeTabBarRef, TabBarSnapshot } from './controller.js'
 
-/** 只依赖原生页面路由与 getTabBar，兼容 Component 构造的页面。 */
-interface TabPageContext {
-  route: string
-  getTabBar?: () => WechatMiniprogram.Component.TrivialInstance | undefined
+/** 控制器注入读取与订阅能力，避免页面绑定反向加载控制器。 */
+interface TabPageController {
+  /** 获取当前底栏的配置与导航快照。 */
+  snapshot(): TabBarSnapshot
+  /** 订阅配置变化并立即提供当前快照。 */
+  subscribe(listener: (snapshot: TabBarSnapshot) => void): () => void
+  /** 底栏尚未挂载时先保存页面路由。 */
+  syncRoute(route: string): boolean
 }
 
-/** 每个 Tab 页在自己的 onShow 中调用，确保同步当前页面对应的独立实例。 */
-export function syncTabPage(page: TabPageContext): void {
-  const bar =
-    typeof page.getTabBar === 'function'
-      ? (page.getTabBar() as NativeTabBarRef | undefined)
-      : undefined
-  if (typeof bar?.syncRoute === 'function') bar.syncRoute(page.route)
-  // 首次 onShow 早于底栏挂载时先记住路由，实例 attached 后读取同一快照。
-  else syncTabBarRoute(page.route)
-}
-
-/** 页面订阅独立保存，避免多个原生 Tab 页面互相覆盖取消函数。 */
-const subscriptions = new WeakMap<object, () => void>()
-
-/** 行为只负责底部留白，页面 onShow 显式调用 syncTabPage，避免业务方法覆盖同步逻辑。 */
-export const tabPageBehavior = Behavior({
-  data: { tabBarSpace: 0 },
-  lifetimes: {
-    /** 页面首帧及配置变化时更新额外空间；设备安全区继续由 page 消费。 */
-    attached() {
-      subscriptions.set(
-        this,
-        subscribeTabBar((snapshot) => this.updateTabBarSpace(snapshot), {
-          configOnly: true,
-        }),
-      )
-    },
-    /** 页面卸载时移除订阅。 */
-    detached() {
-      subscriptions.get(this)?.()
-      subscriptions.delete(this)
-    },
-  },
-  methods: {
-    /** 窗口宽度改变后重新换算 rpx。 */
-    onResize(): void {
-      this.updateTabBarSpace(getTabBarSnapshot())
-    },
-    /** 只计算额外底栏高度，避免和 page 的安全区重复累加。 */
-    updateTabBarSpace(snapshot: TabBarSnapshot): void {
+/** 生成供 Core 调度的页面绑定，每个页面单独保存订阅取消函数。 */
+export function createTabPageAdapter(controller: TabPageController): TabPageAdapter {
+  return (page) => {
+    /** 只计算额外底栏高度，设备安全区继续交由 page 组件处理。 */
+    function updateSpace(snapshot: TabBarSnapshot): void {
       const { layout, hidden } = snapshot.config
-      const tabBarSpace = hidden
-        ? 0
-        : ((layout.height + layout.bottomGap + 16) *
-            wx.getWindowInfo().windowWidth) /
-          750
-      if (this.data.tabBarSpace !== tabBarSpace) this.setData({ tabBarSpace })
-    },
-  },
-})
+      const tabBarSpace = hidden ? 0 : ((layout.height + layout.bottomGap + 16) * wx.getWindowInfo().windowWidth) / 750
+      if (page.data.tabBarSpace !== tabBarSpace) page.setData({ tabBarSpace })
+    }
+    const unsubscribe = controller.subscribe(updateSpace)
+    return {
+      /** 每次显示同步所属实例；首次显示早于底栏挂载时先保存路由。 */
+      show() {
+        const bar = page.getTabBar?.() as NativeTabBarRef | undefined
+        if (typeof bar?.syncRoute === 'function') bar.syncRoute(page.route)
+        else controller.syncRoute(page.route)
+      },
+      /** 旋转或窗口宽度变化后按当前快照重新换算 rpx。 */
+      resize() {
+        updateSpace(controller.snapshot())
+      },
+      /** 页面卸载时释放自己的配置订阅。 */
+      dispose: unsubscribe,
+    }
+  }
+}

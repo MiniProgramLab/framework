@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { onStoreDispose, storeOwner } from '../../../binding.js'
 import { overlayBlocked } from '../selectors.js'
 import type { OverlaySnapshot, OverlayState } from '../types.js'

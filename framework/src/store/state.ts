@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreState, StoreValue } from './types.js'
 
 /** 只信任本模块完成校验并冻结的节点，不能仅凭 Object.isFrozen 跳过校验。 */

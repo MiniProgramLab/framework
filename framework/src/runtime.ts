@@ -1,4 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
 import { storeOptions } from './store/binding.js'
+import { tabPageOptions } from './page/tab.js'
 import type { StorePluginOptions, StorePluginStates } from './store/plugin.js'
 import type { GlobalStoreState } from './store/global.js'
 import type {
@@ -7,15 +9,14 @@ import type {
   StoreState,
 } from './store/types.js'
 
-/** 推导结束后校验方法，避免 Function 索引约束吞掉自定义方法类型。 */
-type MethodsOnly<M> =
-  NoInfer<M> extends WechatMiniprogram.Component.MethodOption ? unknown : never
 /** 字面量开关提供确定成员，动态布尔值提供可选成员。 */
 type Enabled<F extends boolean, K extends string, V> = [F] extends [true]
   ? { [P in K]: V }
   : [F] extends [false]
     ? {}
     : { [P in K]?: V }
+/** 页面留白由编译后的底栏行为管理，不允许业务声明同名字段。 */
+type TabReserved<IsPage extends boolean> = IsPage extends true ? { tabBarSpace?: never } : {}
 /** 全局字段只来自项目公开定义。 */
 type GlobalState = GlobalStoreState
 /** 插件通过声明合并扩展开关与状态，新增插件不修改包装器泛型。 */
@@ -67,7 +68,7 @@ type GlobalData<GF extends boolean> = Enabled<
 type Options<
   D extends WechatMiniprogram.Component.DataOption,
   P extends WechatMiniprogram.Component.PropertyOption,
-  M extends WechatMiniprogram.IAnyObject,
+  M extends WechatMiniprogram.Component.MethodOption,
   B extends WechatMiniprogram.Component.BehaviorOption,
   GF extends boolean,
   S extends StoreState,
@@ -77,16 +78,16 @@ type Options<
   WechatMiniprogram.Component.Options<D, P, M, B, {}, IsPage>,
   'data' | 'properties' | 'methods'
 > & {
-  data?: D & Reserved
-  properties?: P & Reserved
+  data?: D & Reserved & TabReserved<IsPage>
+  properties?: P & Reserved & TabReserved<IsPage>
+  /** 保留具体方法签名，由函数泛型约束校验，避免整组选项退化为 never。 */
   methods?: { [K in keyof M]: M[K] } & Reserved &
     (IsPage extends true ? Partial<WechatMiniprogram.Page.ILifetime> : {})
 } & StoreOptions<GF, S, F> &
   Reserved &
-  MethodsOnly<M> &
   ThisType<
     WechatMiniprogram.Component.Instance<
-      D & GlobalData<GF>,
+      D & GlobalData<GF> & (IsPage extends true ? { tabBarSpace?: number } : {}),
       P,
       M,
       B,
@@ -100,7 +101,7 @@ type Options<
 export type PageOptions<
   D extends WechatMiniprogram.Component.DataOption,
   P extends WechatMiniprogram.Component.PropertyOption,
-  M extends WechatMiniprogram.IAnyObject,
+  M extends WechatMiniprogram.Component.MethodOption,
   B extends WechatMiniprogram.Component.BehaviorOption,
   GF extends boolean = false,
   S extends StoreState = StoreState,
@@ -111,7 +112,7 @@ export type PageOptions<
 export type ComponentOptions<
   D extends WechatMiniprogram.Component.DataOption,
   P extends WechatMiniprogram.Component.PropertyOption,
-  M extends WechatMiniprogram.IAnyObject,
+  M extends WechatMiniprogram.Component.MethodOption,
   B extends WechatMiniprogram.Component.BehaviorOption,
   GF extends boolean = false,
   S extends StoreState = StoreState,
@@ -122,22 +123,17 @@ export type ComponentOptions<
 export function definePage<
   D extends WechatMiniprogram.Component.DataOption = {},
   P extends WechatMiniprogram.Component.PropertyOption = {},
-  M extends WechatMiniprogram.IAnyObject = {},
+  M extends WechatMiniprogram.Component.MethodOption = {},
   B extends WechatMiniprogram.Component.BehaviorOption = [],
   const GF extends boolean = false,
   S extends StoreState = StoreState,
   const F extends PluginFlags = DisabledPlugins,
 >(
   options: PageOptions<D, P, M, B, GF, S, F>,
-): WechatMiniprogram.Component.Identifier<D, P, M> {
-  return Component(
-    storeOptions(options, true) as WechatMiniprogram.Component.Options<
-      D,
-      P,
-      M,
-      B
-    >,
-  )
+): WechatMiniprogram.Component.Identifier<D, P, M>
+/** 第二参数仅由 CLI 注入，公开签名只接受业务选项。 */
+export function definePage(options: object, compiledTabPage = false): WechatMiniprogram.Component.Identifier {
+  return Component(storeOptions(tabPageOptions(options, compiledTabPage), true))
 }
 
 /** 通过 Component 注册组件，关闭所有参与项的普通组件不附加 Store 生命周期。 */
@@ -153,7 +149,7 @@ export function defineComponent<
   options: ComponentOptions<D, P, M, B, GF, S, F>,
 ): WechatMiniprogram.Component.Identifier<D, P, M> {
   return Component(
-    storeOptions(options, false) as WechatMiniprogram.Component.Options<
+    storeOptions(tabPageOptions(options, false), false) as WechatMiniprogram.Component.Options<
       D,
       P,
       M,

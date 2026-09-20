@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { formatTabBadge } from './config.js'
 import { deriveTabPalette } from './theme.js'
 import type { CustomTabBarConfig, CustomTabItem } from './types.js'

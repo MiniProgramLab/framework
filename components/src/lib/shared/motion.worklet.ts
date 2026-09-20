@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 动画在 UI 线程执行，只在完成时回传逻辑线程。 */
 const { shared, cancelAnimation, runOnJS } = wx.worklet
 /** 原生动画对象可直接赋给数值共享值，补齐官方声明中的赋值类型。 */

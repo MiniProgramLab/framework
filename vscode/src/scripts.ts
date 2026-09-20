@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import ts from 'typescript'
 import path from 'node:path'
 import { Project, type SymbolLocation } from './project'
@@ -46,6 +47,10 @@ export class Scripts {
     }
     if (ts.isPropertyAccessExpression(expression) && ts.isIdentifier(expression.expression)) {
       const namespace = expression.expression.text
+      if (namespace === 'mini' && !this.local(source, namespace, new Set())) {
+        // 声明函数仅识别独立调用，mini 成员不作为页面或组件注册入口。
+        return expression.getText(source)
+      }
       if (source.statements.some((statement) => ts.isImportDeclaration(statement)
         && statement.importClause?.namedBindings && ts.isNamespaceImport(statement.importClause.namedBindings)
         && statement.importClause.namedBindings.name.text === namespace)) return expression.name.text
@@ -73,9 +78,10 @@ export class Scripts {
   }
 
   /** 查找实际执行的注册调用，排除函数体内尚未执行的工厂定义。 */
-  private registrationCall(source: ts.SourceFile, componentOnly = false): ts.CallExpression | undefined {
+  private registrationCall(source: ts.SourceFile, componentOnly = false, runtimeOnly = false): ts.CallExpression | undefined {
     const names = componentOnly ? ['Component', 'defineComponent', 'VantComponent']
-      : ['Page', 'Component', 'definePage', 'defineComponent', 'VantComponent', 'definePageConfig', 'defineAppConfig', 'defineComponentConfig']
+      : runtimeOnly ? ['Page', 'Component', 'definePage', 'defineComponent', 'VantComponent']
+        : ['Page', 'Component', 'definePage', 'defineComponent', 'VantComponent', 'definePageConfig', 'defineAppConfig', 'defineComponentConfig']
     /** 按源码顺序扫描表达式，声明中的箭头函数不代表已注册组件。 */
     const visit = (node: ts.Node): ts.CallExpression | undefined => {
       if (ts.isFunctionLike(node)) return undefined
@@ -255,7 +261,7 @@ export class Scripts {
   registration(file: string): Value | undefined {
     const source = this.project.source(file)
     if (!source) return undefined
-    const call = this.registrationCall(source)
+    const call = this.registrationCall(source, false, true) ?? this.registrationCall(source)
     if (call) return this.value(call)
     for (const statement of source.statements) {
       if (ts.isExportAssignment(statement)) return this.value(statement.expression)
@@ -463,7 +469,21 @@ export class Scripts {
     const result = new Map<string, string>()
     const local = template.replace(/\.wxml$/, '')
     for (const base of [path.join(this.project.sourceRoot, 'app'), local]) {
-      const config = this.project.first([base + '.config.ts', base + '.config.js', base + '.config.mjs', base + '.config.cjs', base + '.json'])
+      // 页面配置按同目录声明发现，原生组件和应用仍沿用各自配置文件。
+      const script = base === local && this.project.first([local + '.ts', local + '.js'])
+      const source = script && this.project.source(script)
+      const runtime = source && this.registrationCall(source, false, true)
+      const component = runtime && ['Component', 'defineComponent', 'VantComponent'].includes(this.callName(runtime))
+      const pageConfigs = base === local && !component ? this.project.siblingScripts(path.dirname(local)).flatMap((file) => {
+        const source = this.project.source(file)
+        if (!source) return []
+        return source.statements.flatMap((statement) => ts.isExpressionStatement(statement) && ts.isCallExpression(statement.expression)
+          && this.callName(statement.expression) === 'definePageConfig' && !this.local(source, 'definePageConfig', new Set())
+            ? [{ file, value: this.value(statement.expression) }] : [])
+      }) : []
+      if (pageConfigs.length > 1) continue
+      const page = pageConfigs[0]
+      const config = page?.file ?? this.project.first([base + '.config.ts', base + '.config.js', base + '.config.mjs', base + '.config.cjs', base + '.json'])
       if (!config) continue
       if (config.endsWith('.json')) {
         const registrations = this.project.json(config).usingComponents as Record<string, string> | undefined
@@ -473,15 +493,21 @@ export class Scripts {
           if (target) result.set(name, this.componentDefinition(target, name).file)
         }
       } else {
-        const registration = this.registration(config)
-        const using = registration && this.fields(registration).find((field) => field.name === 'usingComponents')
-        if (!using) continue
-        for (const field of this.fields(using.value)) {
-          result.delete(field.name)
-          const value = this.resolve(field.value)
-          const reference = value && this.name(value.node)
-          const target = reference && this.project.component(reference, config)
-          if (target) result.set(field.name, this.componentDefinition(target, field.name).file)
+        const registration = page?.value ?? this.registration(config)
+        if (!registration) continue
+        const fields = this.fields(registration)
+        const common = page && fields.find((field) => field.name === 'config')
+        const configurations = page ? [common?.value] : [registration]
+        for (const configuration of configurations) {
+          const using = configuration && this.fields(configuration).find((field) => field.name === 'usingComponents')
+          if (!using) continue
+          for (const field of this.fields(using.value)) {
+            result.delete(field.name)
+            const value = this.resolve(field.value)
+            const reference = value && this.name(value.node)
+            const target = reference && this.project.component(reference, config)
+            if (target) result.set(field.name, this.componentDefinition(target, field.name).file)
+          }
         }
       }
     }

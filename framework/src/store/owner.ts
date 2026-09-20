@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { releasePage } from './global.js'
 
 /** 归属层只依赖明确的原生实例能力，不依赖路由或页面栈。 */

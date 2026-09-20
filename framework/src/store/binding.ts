@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { viewPatch } from './view.js'
 import { connectGlobal, connectPlugin } from './global.js'
 import type { StoreConnection } from './core.js'

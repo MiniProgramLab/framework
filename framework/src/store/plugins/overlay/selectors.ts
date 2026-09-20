@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { OverlaySnapshot } from './types.js'
 
 /** 所有弹层均隔离背景，自身内容仅被更高弹层限制。 */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import * as vscode from 'vscode'
 
 /** 一次定义查询的目标，只有实际选中目标后才允许滚动。 */

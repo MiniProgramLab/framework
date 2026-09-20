@@ -20,6 +20,7 @@
     },
     "expression": {
       "name": "meta.embedded.expression.wxml",
+      "contentName": "source.js.embedded.wxml",
       "begin": "\\{\\{",
       "end": "\\}\\}",
       "beginCaptures": {

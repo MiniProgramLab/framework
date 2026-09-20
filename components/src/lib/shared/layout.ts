@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { WindowLayout } from './window.js'
 
 /** 弹层布局字段同时供模板定位和正文高度测量使用。 */

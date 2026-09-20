@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { createStoreRoot } from './core.js'
 import type { StoreConnection, StoreRoot } from './core.js'
 import { definitionFactory } from './definition.js'

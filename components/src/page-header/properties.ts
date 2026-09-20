@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 页头与页面容器共用属性，避免透传时默认值产生差异。 */
 export const headerProperties = {
   /** 主标题、副标题与日期等辅助信息。 */

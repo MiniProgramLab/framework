@@ -1,0 +1,24 @@
+{
+  "name": "@miniprogramlab/checks",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "框架运行时、组件协作及类型契约的独立回归检查",
+  "scripts": {
+    "dev:check": "tsc --noEmit",
+    "dev:test": "pnpm --silent --filter @miniprogramlab/cli dev:check && pnpm --silent dev:check && node --test tests/*.test.mjs",
+    "bench:store": "node tests/store.bench.mjs"
+  },
+  "devDependencies": {
+    "@miniprogramlab/cli": "workspace:*",
+    "@miniprogramlab/core": "workspace:*",
+    "@miniprogramlab/ui": "workspace:*",
+    "esbuild": "catalog:",
+    "miniprogram-api-typings": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "Apache-2.0"
+}

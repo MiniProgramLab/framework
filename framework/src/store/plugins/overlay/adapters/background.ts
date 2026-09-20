@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { PageOwner } from '../../../owner.js'
 
 /** 这里只存原生能力就绪信息，弹层事实仍全部保存在 Store 中。 */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { initialOverlayState, validateOverlayState } from './state.js'
 import type { OverlayState } from './types.js'
 import { defineStorePlugin } from '../../plugin.js'

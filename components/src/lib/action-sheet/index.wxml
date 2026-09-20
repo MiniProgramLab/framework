@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <overlay
   id="overlay"
   presentation="{{ { mounted: mounted, rendered: rendered, covered: covered, windowHeight: windowHeight } }}"

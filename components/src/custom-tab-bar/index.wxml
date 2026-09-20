@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <root-portal enable="{{fixed}}">
   <view
     class="custom-tab {{fixed ? 'custom-tab--fixed' : ''}}"

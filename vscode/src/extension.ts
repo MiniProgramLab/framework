@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import * as vscode from 'vscode'
 import path from 'node:path'
 import { Project, type SymbolLocation } from './project'

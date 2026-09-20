@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreDefinition, StoreState } from '../../types.js'
 
 /** 页面定义独立于实例，只有页面插件解释此定义。 */

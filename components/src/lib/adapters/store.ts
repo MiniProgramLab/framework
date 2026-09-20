@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 组件库只通过此处接入宿主 Store；独立发包时可替换适配实现。 */
 export {
   onStoreDispose,

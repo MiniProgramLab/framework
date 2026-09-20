@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreSnapshot, StoreState } from './types.js'
 
 /** 插件内部区域统一使用私有命名空间，不允许作为业务状态字段。 */

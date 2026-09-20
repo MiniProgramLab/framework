@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import path from 'node:path'
 import { Project, type SymbolLocation } from './project'
 

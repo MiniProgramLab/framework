@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
 import {
   getTabBarSnapshot,
-  navigateTab,
+  navigateToTab,
   subscribeTabBar,
   syncTabBarRoute,
 } from './controller.js'
@@ -136,7 +137,7 @@ export async function navigateTabSelection(
 ): Promise<void> {
   runtime.navigation.originId = id
   try {
-    await navigateTab(id, animation)
+    await navigateToTab(id, animation)
   } catch (error) {
     runtime.navigation.originId = ''
     if (!runtime.attached) return

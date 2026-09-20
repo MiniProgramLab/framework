@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { defineComponent } from '../adapters/component.js'
 import { layerBehavior, layerProperties } from '../shared/layer.js'
 import type { LayerHost } from '../shared/layer.js'

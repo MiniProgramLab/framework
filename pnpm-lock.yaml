@@ -26,8 +26,32 @@ importers:
 
   .: {}
 
+  checks:
+    devDependencies:
+      '@miniprogramlab/cli':
+        specifier: workspace:*
+        version: link:../cli
+      '@miniprogramlab/core':
+        specifier: workspace:*
+        version: link:../framework
+      '@miniprogramlab/ui':
+        specifier: workspace:*
+        version: link:../components
+      esbuild:
+        specifier: 'catalog:'
+        version: 0.28.2
+      miniprogram-api-typings:
+        specifier: 'catalog:'
+        version: 5.2.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   cli:
     dependencies:
+      '@miniprogramlab/core':
+        specifier: workspace:*
+        version: link:../framework
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2
@@ -43,6 +67,13 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+    devDependencies:
+      '@types/less':
+        specifier: ^3.0.8
+        version: 3.0.8
+      '@types/node':
+        specifier: ^22.15.30
+        version: 22.20.3
 
   components:
     devDependencies:
@@ -58,6 +89,9 @@ importers:
 
   framework:
     devDependencies:
+      esbuild:
+        specifier: 'catalog:'
+        version: 0.28.2
       miniprogram-api-typings:
         specifier: 'catalog:'
         version: 5.2.3
@@ -460,6 +494,9 @@ packages:
 
   '@textlint/types@15.8.0':
     resolution: {integrity: sha512-Anhc6y5736YIsvqae0U6k0YmB2M/QVHkEeOv2aydAn/WIkdI69dCOiDbe3/+RagS3qstFTSFWJzNRA2lUjv19w==}
+
+  '@types/less@3.0.8':
+    resolution: {integrity: sha512-Gjm4+H9noDJgu5EdT3rUw5MhPBag46fiOy27BefvWkNL8mlZnKnCaVVVTLKj6RYXed9b62CPKnPav9govyQDzA==}
 
   '@types/node@22.20.3':
     resolution: {integrity: sha512-DZmzkmwHzXrLPAXPyKNDzlIwMMUZCVacoD25ywdy5YTKGbOx/2ld+Q38Im2zJ0vBuZP5Prd3VZutKZyXwkOS8A==}
@@ -1893,6 +1930,8 @@ snapshots:
   '@textlint/types@15.8.0':
     dependencies:
       '@textlint/ast-node-types': 15.8.0
+
+  '@types/less@3.0.8': {}
 
   '@types/node@22.20.3':
     dependencies:

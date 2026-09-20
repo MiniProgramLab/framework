@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 <view
   class="page-header"
   style="background: {{background}}; padding-top: {{statusBarHeight}}px;"

@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: Apache-2.0
 import { getWindowLayout } from '../lib/shared/window.js'
 import { headerProperties } from './properties.js'
-import { componentNavigation } from '../configure.js'
+import { getComponentNavigation } from '../configure.js'
 
 /** 根据设计稿统一紧凑导航、大标题、胶囊避让与返回交互。 */
 defineComponent({
@@ -64,8 +65,10 @@ defineComponent({
       if (canGoBack) wx.navigateBack({ delta: 1, fail })
       else
         void Promise.resolve().then(() => {
-          const navigation = componentNavigation()
-          return navigation.returnTo(this.data.homeUrl || navigation.homeUrl())
+          const navigation = getComponentNavigation()
+          return navigation.navigateToUrl(this.data.homeUrl || navigation.getEntryRouteUrl()).reLaunch()
+        }).then((result) => {
+          if (!result.ok) fail({ errMsg: result.error.message })
         }).catch((error) => {
           fail({
             errMsg:

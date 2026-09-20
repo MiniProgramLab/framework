@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 导航项以稳定 id 标识，排序和文案变化不会改变选中身份。 */
 export interface CustomTabItem {
   /** 当前组件内唯一的业务标识。 */

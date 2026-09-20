@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { Store } from '../../types.js'
 import type { OverlayEntry, OverlayState } from './types.js'
 

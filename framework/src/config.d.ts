@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+import type { RouteParamRule, TabRouteMetadata } from './router/types.js'
+
+/** 配置使用与路由运行时一致的平台无关协议。 */
+export type { RouteParamRule, TabRouteMetadata } from './router/types.js'
+
 /** 原生页面窗口配置；额外微信配置字段按原样保留。 */
 export interface WindowConfig {
   /** 导航栏标题。 */
@@ -22,18 +28,24 @@ export interface WindowConfig {
   [key: string]: unknown
 }
 
-/** 页面配置中的 pagesName 仅用于生成路由映射，不写入微信页面 JSON。 */
-export interface PageConfig extends WindowConfig {
+/** 原生页面公共字段；未知平台字段仅在 config 内透传。 */
+export interface NativePageConfig {
+  /** 本地、npm 或插件组件的路径映射。 */
+  usingComponents?: Record<string, string>
+  /** 页面不能注册为原生组件。 */
+  component?: false
+  /** 原生扩展字段由目标平台适配器校验。 */
+  [key: string]: unknown
+}
+
+/** 微信 Skyline 原生页面配置，不包含框架路由或构建字段。 */
+export interface WechatPageConfig extends WindowConfig, NativePageConfig {
   /** 页面继承纯 Skyline 渲染策略，不允许切换到 WebView。 */
   renderer?: 'skyline'
   /** 页面使用 glass-easel 组件框架。 */
   componentFramework?: 'glass-easel'
   /** 渲染选项统一放在 app.config.ts，避免页面覆盖全局策略。 */
   rendererOptions?: never
-  /** 唯一英文页面名，以字母开头，后续可包含字母、数字及下划线。 */
-  pagesName: string
-  /** 路由类型、参数及环境约束仅参与构建，不透传微信页面配置。 */
-  route?: PageRouteMetadata
   /** 本地、npm 或插件组件的路径映射。 */
   usingComponents?: Record<string, string>
   /** 页面不是自定义组件，不能声明 component: true。 */
@@ -46,26 +58,42 @@ export interface PageConfig extends WindowConfig {
   enableShareTimeline?: boolean
 }
 
-/** 普通路由参数按声明校验并编码，不接受未声明字段。 */
-export interface RouteParamRule {
-  type: 'string' | 'number' | 'boolean'
-  required?: boolean
+/** 页面参与构建的环境范围；省略时在所有构建模式下启用。 */
+export interface PageBuildConfig {
+  /** 允许的构建模式，与 CLI 的 --mode 对应。 */
+  readonly modes?: readonly string[]
 }
 
-/** 页面统一维护静态 Tab 注册及运行时展示所需信息。 */
-export interface TabRouteMetadata {
-  id: string
-  text: string
-  iconPath: string
-  selectedIconPath?: string
-  order: number
-}
-
-/** 环境专用页面放在独立目录；Tab 路由不允许查询参数。 */
-export type PageRouteMetadata = { environments?: readonly string[] } & (
-  | { kind?: 'page'; params?: Record<string, RouteParamRule>; tab?: never }
-  | { kind: 'tab'; tab: TabRouteMetadata; params?: never }
+/** 页面信息是路由名称、枚举注释和 Tab 注册的唯一来源。 */
+export type PageMetadata = {
+  /** 应用内唯一的稳定路由名称。 */
+  readonly name: string
+  /** 生成 PageEnum 枚举成员的注释；省略时使用路由名称。 */
+  readonly description?: string
+} & (
+  | {
+      /** 普通页面允许的查询参数及标量规则。 */
+      readonly params?: Readonly<Record<string, RouteParamRule>>
+      /** 普通页面不注册底栏项。 */
+      readonly tabBar?: never
+    }
+  | {
+      /** 声明即为 Tab 页；底栏标识默认使用页面名称。 */
+      readonly tabBar: Omit<TabRouteMetadata, 'id'> & { readonly id?: string }
+      /** 原生 Tab 路由不接受查询参数。 */
+      readonly params?: never
+    }
 )
+
+/** 页面编译期声明：路由身份、构建范围和原生配置各自独立。 */
+export interface PageConfig<TNative extends NativePageConfig = WechatPageConfig> {
+  /** 唯一名称、描述、参数或 Tab 展示信息，不写入原生 JSON。 */
+  readonly page: PageMetadata
+  /** 限定页面参与构建的环境，不在页面中指定平台。 */
+  readonly build?: PageBuildConfig
+  /** 公共原生页面字段；省略时由平台适配器补齐默认值。 */
+  readonly config?: TNative
+}
 
 /** 全局 Skyline 选项，固定布局默认值并关闭灰度选择。 */
 export interface SkylineOptions {

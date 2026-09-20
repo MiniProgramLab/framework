@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 在真实 VS Code 扩展宿主中执行已注册的定义与补全提供器。 */
 const vscode = require('vscode')
 const assert = require('node:assert/strict')
@@ -49,7 +50,7 @@ async function run() {
       await fs.mkdir(path.dirname(path.join(root, name)), { recursive: true })
       await fs.writeFile(path.join(root, name), text)
     }
-    const extension = vscode.extensions.getExtension('skyline-kit.skyline-kit-vscode')
+    const extension = vscode.extensions.getExtension('miniprogramlab.devtool')
     assert.ok(extension, '扩展必须被 VS Code 发现')
     await extension.activate()
     /** 通过编辑器实际执行定义提供器，接受宿主内其他合法提供器的补充结果。 */

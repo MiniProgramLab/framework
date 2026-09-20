@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { CustomTabTheme } from './types.js'
 
 /** 渲染专用色板，不作为可配置项开放。 */

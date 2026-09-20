@@ -25,7 +25,7 @@ Mini 表明小程序定位；Loom 表达将独立模块组合成完整开发体�
 | Skyline 扩展 | MiniLoom Skyline | `@miniloom/renderer-wechat-skyline` |
 | 微信默认组合 | MiniLoom 微信 Skyline 预设 | `@miniloom/preset-wechat-skyline` |
 
-包命名空间和扩展发布者标识是设计占位，本文不宣称已取得注册权。旧 `skyline` 命令和 `@miniprogramlab/*` 进入兼容迁移期，不能只全局替换字符串而改变已有语义。
+包命名空间和扩展发布者标识是设计占位，本文不宣称已取得注册权。当前实际 CLI 使用 `miniprogram` 命令、`miniprogram.config.mjs` 配置和 `@miniprogramlab/*` 包名；本文中的 MiniLoom 命名仅为设计提案。
 
 ## 2. 当前代码基础与必须保留的行为
 
@@ -106,7 +106,7 @@ Skyline 是微信的渲染选项，glass-easel 是组件框架，两者不应作
 | `cli` | 参数、配置选择、命令、终端输出、退出码 | 编译算法和平台业务规则 |
 | `vscode` | LSP 客户端、状态栏、命令、任务与设置 | 平台语义、组件解析、构建算法 |
 | `ui` | 组件公开契约、行为模型、tokens、组件与变体清单 | 业务状态、硬编码首页、直接引用 `wx/tt/my` |
-| `ui-wechat-skyline` | 微信 Skyline 组件视图、宿主挂载和动画实现 | 跨平台行为模型、FitLedger 业务逻辑 |
+| `ui-wechat-skyline` | 微信 Skyline 组件视图、宿主挂载和动画实现 | 跨平台行为模型、应用业务逻辑 |
 | `adapter-wechat` | 微信注册语义、API 映射、配置与方言、工程输出 | Skyline 专属动画与布局约束 |
 | `renderer-wechat-skyline` | Skyline 配置、样式规则、Worklet 与渲染能力 | 通用路由、通用 Store、终端交互 |
 | `preset-wechat-skyline` | 组合官方 adapter、renderer、UI 变体和常用插件 | 第二套运行时或编译器 |
@@ -379,7 +379,7 @@ Worklet 转换归 Skyline 扩展：校验可调用函数和线程可传输值，
 
 主题共享的是设计 token 语义，目标样式构建器将其转换为目标支持的常量、样式规则或经验证的变量形式。不能默认各平台都支持相同 CSS 自定义属性、选择器和布局行为。
 
-导航由应用注入，组件不能写死首页或读取 FitLedger Store。底栏声明区分“平台原生自定义底栏接入”与“页面内底栏视图”；后者可复用外观，但不自动具有前者的生命周期、页面缓存和路由行为。
+导航由应用注入，组件不能写死首页或读取 应用 Store。底栏声明区分“平台原生自定义底栏接入”与“页面内底栏视图”；后者可复用外观，但不自动具有前者的生命周期、页面缓存和路由行为。
 
 ### 8.4 两种组件分发
 
@@ -585,7 +585,7 @@ Core、contracts 与运行时共享插件使用兼容的 peer 约束。Node 构�
 
 首期交付 A–E。F 是验证架构可扩展性的下一期，不能只凭接口看起来抽象就宣称多端已经完成。
 
-兼容层保留旧配置文件、`skyline` 命令、导入路径与原生类型语义，转换为新的微信目标计划并输出弃用提示。旧包只转发到同一份实际运行时；不能各内置一份 Core。全局 `definePage/defineComponent` 如继续支持，其注入仍限制在兼容预设，通用新 API 推荐显式导入。
+CLI 的实际命令和默认配置已统一为 `miniprogram` 与 `miniprogram.config.mjs`，不提供旧命令别名。未来适配层应复用同一份实际运行时，避免重复内置 Core。全局 `definePage/defineComponent` 如继续支持，其注入仍限制在兼容预设，通用新 API 推荐显式导入。
 
 改名应检查包名、package exports、tsconfig types、CLI 自动导入、生成路径、组件注册、VSIX 设置键和脚本引用。扩展发布身份变化可能需要用户安装新扩展，不能承诺仅修改显示名称即可无缝升级；旧设置可在兼容期读取并提示迁移。
 

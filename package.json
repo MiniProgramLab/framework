@@ -15,8 +15,9 @@
   "scripts": {
     "dev": "pnpm -r --parallel --if-present dev",
     "dev:check": "pnpm -r --workspace-concurrency=1 dev:check",
-    "dev:test": "pnpm --filter skyline-kit-vscode dev:test",
+    "dev:test": "pnpm --filter @miniprogramlab/core dev:test && pnpm --filter @miniprogramlab/cli dev:test && pnpm --filter @miniprogramlab/checks dev:test && pnpm --filter devtool dev:test",
     "pack:framework": "node pack.mjs",
     "dev:framework:install-check": "node checks/install.mjs"
-  }
+  },
+  "license": "Apache-2.0"
 }

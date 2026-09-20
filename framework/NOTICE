@@ -1,0 +1,15 @@
+MiniProgramLab Framework
+Copyright 2026 MiniProgramLab contributors
+
+Developed by the MiniProgramLab community and distributed under the
+Apache License, Version 2.0.
+Project: https://github.com/MiniProgramLab/framework
+
+The Core package includes the MiniProgramLab Router module.
+
+Binary distributions of the editor extension include TypeScript. Its
+upstream license and third-party notices are included in
+licenses/typescript-LICENSE.txt and
+licenses/typescript-ThirdPartyNoticeText.txt within the extension.
+Other third-party dependencies and their copyright notices remain subject
+to their respective licenses.

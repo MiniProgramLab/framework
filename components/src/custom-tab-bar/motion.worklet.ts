@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { sampleTabSpring } from './spring.worklet.js'
 import type { CustomTabAnimation, CustomTabMotion } from './types.js'
 

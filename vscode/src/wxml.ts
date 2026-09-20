@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 属性与标签的偏移用于未完成输入时的补全和定义定位。 */
 export interface Attribute { name: string; start: number; valueStart: number; valueEnd: number; value: string }
 /** 标签扫描结果保留首尾位置，允许没有闭合尖括号的输入。 */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { StoreSnapshot, StoreState } from '../../types.js'
 
 /** 活动条目只保存展示事实，完全关闭后从列表删除。 */

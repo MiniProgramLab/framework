@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { createStorePluginRegistry } from './plugin.js'
 import { pageStorePlugin } from './plugins/page/index.js'
 import { overlayStorePlugin } from './plugins/overlay/index.js'

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { OverlayEntry, OverlaySnapshot, OverlayState } from './types.js'
 
 /** 为新页面创建独立的初始弹层状态。 */

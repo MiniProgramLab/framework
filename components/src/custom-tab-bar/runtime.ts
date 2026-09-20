@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import { createDefaultConfig } from './config.js'
 import type { CustomTabBarConfig, CustomTabItem } from './types.js'
 import type { FluidState } from './motion.worklet.js'

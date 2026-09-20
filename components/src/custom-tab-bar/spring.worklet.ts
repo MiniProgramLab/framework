@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 import type { CustomTabMotion } from './types.js'
 
 /** 跨组件接续使用的位置与速度，单位分别为逻辑像素及逻辑像素每秒。 */

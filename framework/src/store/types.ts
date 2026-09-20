@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** Store 可保存的普通可序列化值。 */
 export type StoreValue =
   | null

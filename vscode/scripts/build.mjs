@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 打包扩展和 TypeScript 解析器，VSIX 安装后不依赖项目 node_modules。 */
 import { build, context } from 'esbuild'
 import { fileURLToPath } from 'node:url'
@@ -16,6 +17,8 @@ const options = {
   absWorkingDir: fileURLToPath(new URL('../', import.meta.url)),
   entryPoints: ['src/extension.ts'], outfile: 'dist/extension.cjs',
   bundle: true, platform: 'node', format: 'cjs', target: 'node20',
+  // 发布的扩展代码保留协议标识，第三方声明通过独立文件随包交付。
+  banner: { js: '// SPDX-License-Identifier: Apache-2.0' },
   external: ['vscode'], sourcemap: false, minify: true, logLevel: 'info',
 }
 if (process.argv.includes('--watch')) {

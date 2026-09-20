@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 /** 手势共享值属于组件实例，默认允许内容滚动。 */
 export function createScrollGate(): WechatMiniprogram.Skyline.SharedValue<boolean> {
   return wx.worklet.shared(
