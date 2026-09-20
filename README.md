@@ -93,4 +93,6 @@ pnpm add -D /path/to/miniprogramlab-cli-0.1.0.tgz typescript miniprogram-api-typ
 
 ## 开源协议
 
+Copyright 2026 [Rainer-Yu](https://github.com/Rainer-Yu) and MiniProgramLab contributors（MiniProgramLab 项目贡献者）。
+
 采用 [Apache-2.0](LICENSE)。版权及内置依赖信息见 [NOTICE](NOTICE)，交付包均包含这两个文件。项目源码使用简短 SPDX 标头，上游许可证及声明文件保持完整。

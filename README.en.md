@@ -93,4 +93,6 @@ Routing is provided by [`@miniprogramlab/core/router`](framework/README.en.md#cr
 
 ## License
 
+Copyright 2026 [Rainer-Yu](https://github.com/Rainer-Yu) and MiniProgramLab contributors.
+
 Licensed under [Apache-2.0](LICENSE). Copyright and bundled dependency information are provided in [NOTICE](NOTICE). Distributed packages include both files. First-party code uses short SPDX headers; upstream license and notice files remain intact.
